@@ -16,6 +16,7 @@ const PRESS_UP = 1
 const PRESS_DOWN = 2
 const PRESS_RIGHT = 3
 const PRESS_LEFT = 4
+const SELECT = 5
 
 ### VARIABLES ###
 
@@ -30,10 +31,12 @@ var allInputLocked = false
 
 # entities
 var player
+var map
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	player = self.get_node("player")
+	map = self.get_node("map")
 
 ### UTILITY FUNCTIONS ###
 
@@ -51,7 +54,6 @@ func get_player_input():
 		## TODO: what is priority order for inputs?
 		
 		if Input.is_action_pressed("ui_up"):
-			print("up detected")
 			return PRESS_UP
 		elif Input.is_action_pressed("ui_down"):
 			return PRESS_DOWN
@@ -59,6 +61,8 @@ func get_player_input():
 			return PRESS_LEFT
 		elif Input.is_action_pressed("ui_right"):
 			return PRESS_RIGHT
+		elif Input.is_action_pressed("ui_select"):
+			return SELECT
 		else:
 			return -1
 	else:
@@ -74,16 +78,29 @@ func _process(delta):
 	if input > 0:
 		
 		## TODO: check mode first
+		
+		# move buttons
 		if input == PRESS_UP:
-			##TODO: need to check with map that this is a legal move
-			allInputLocked = true
-			player.move_up()
+			if map.check_pos(player.get_pos() + Vector2(0, -1)):
+				allInputLocked = true
+				player.move_up()
 		elif input == PRESS_DOWN:
-			allInputLocked = true
-			player.move_down()
+			if map.check_pos(player.get_pos() + Vector2(0, 1)):
+				allInputLocked = true
+				player.move_down()
 		elif input == PRESS_LEFT:
-			allInputLocked = true
-			player.move_left()
+			if map.check_pos(player.get_pos() + Vector2(-1, 0)):
+				allInputLocked = true
+				player.move_left()
 		elif input == PRESS_RIGHT:
-			allInputLocked = true
-			player.move_right()
+			if map.check_pos(player.get_pos() + Vector2(1, 0)):
+				allInputLocked = true
+				player.move_right()
+		# interact
+		elif input == SELECT:
+			var item = map.check_for_interactive(player.get_pos())
+			
+			if !(item == null):
+				allInputLocked = true
+				player.pickup_item(item)
+			
