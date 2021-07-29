@@ -37,6 +37,9 @@ var map
 func _ready():
 	player = self.get_node("player")
 	map = self.get_node("map")
+	
+	player.pos = map.get_open_tile()
+	player.position = map2screen(player.pos)
 
 ### UTILITY FUNCTIONS ###
 

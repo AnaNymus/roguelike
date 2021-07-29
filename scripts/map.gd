@@ -14,12 +14,14 @@ var itemMap
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	tilemap = self.get_node("TileMap")
-	items = self.get_node("items")
-	
 	# TODO: later, once we sort out map generation, we will 
 	# set this based on generated map size
-	mapSize = Vector2(31, 18)
+	mapSize = Vector2(50, 50)
+	
+	get_new_map(mapSize)
+	items = self.get_node("items")
+	
+	
 	
 	itemMap = create_2d_array(mapSize)
 	# set items in place
@@ -57,6 +59,20 @@ func check_for_interactive(pos):
 	# but for now, only items
 	return itemMap[pos.x][pos.y]
 
+func get_new_map(size):
+	var i = preload("res://scenes/map_generator.tscn")
+	
+	var mg = i.instance()
+	mg.generate_map(size, 3, 4, 8)
+	
+	var m = mg.get_node("TileMap")
+	m.get_parent().remove_child(m)
+	
+	self.add_child(m)
+	tilemap = m
+	
+	
+
 
 # randomly places NUM items on accessible areas of the floor
 # TODO: later, this should take a dictionary of item IDs and
@@ -78,4 +94,9 @@ func gen_items(num):
 			itemMap[vec.x][vec.y] = item
 			countdown -= 1
 	
-	
+
+func get_open_tile():
+	while true:
+		var vec = Vector2(randi()%int(mapSize.x), randi()%int(mapSize.y))
+		if check_pos(vec):
+			return vec

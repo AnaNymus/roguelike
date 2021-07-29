@@ -15,7 +15,7 @@ var params
 func _ready():
 	randomize()
 	map = self.get_node("TileMap")
-	generate_map(Vector2(80, 60), 3, 4, 8)
+	#generate_map(Vector2(80, 60), 3, 4, 8)
 
 
 # generate map of size sz
@@ -23,6 +23,7 @@ func _ready():
 # mindim minD
 # maxdim maxD
 func generate_map(sz, c, minD, maxD):
+	map = self.get_node("TileMap")
 	params = {
 		"mapsize": sz - Vector2(1, 1),
 		"connectivity": c,
@@ -470,7 +471,7 @@ func propagate(feat):
 # returns true if it is all wall
 # returns false if there are already features in it
 func check_overlap(feat):
-	if feat["left"] < 0 or feat["top"] < 0 or feat["right"] >= params["mapsize"].x or feat["bottom"] >= params["mapsize"].y:
+	if feat["left"] < 1 or feat["top"] < 1 or feat["right"] >= params["mapsize"].x or feat["bottom"] >= params["mapsize"].y:
 		return false
 	
 	
@@ -499,8 +500,4 @@ func get_percent_open():
 	
 	return sum/(params["mapsize"].x * params["mapsize"].y)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	if Input.is_action_just_pressed("ui_select"):
-		print(get_percent_open())
-	
+
