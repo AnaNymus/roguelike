@@ -10,6 +10,7 @@ const WEST = 3
 var map
 
 
+
 var params
 ## example feature dict
 #var feat = {
@@ -23,7 +24,7 @@ var params
 func _ready():
 	randomize()
 	map = self.get_node("TileMap")
-	generate_map(Vector2(80, 60), 4, 3, 6)
+	generate_map(Vector2(80, 60), 1, 4, 8)
 
 
 # generate map of size sz
@@ -74,7 +75,9 @@ func generate_map(sz, c, minD, maxD):
 # params is dict of sz, c, minD, maxD
 func propagate(feat, params):
 	# repeat to the degree of connectivity
-	for i in range(params["connectivity"]):
+	var cont = true
+	while cont:
+	#for i in range(params["connectivity"]):
 		yield(get_tree().create_timer(1.0), "timeout")
 		
 		# pick a wall
@@ -154,8 +157,8 @@ func propagate(feat, params):
 						newFeat["bottomright"] = Vector2(left, bottom)
 						
 					elif face == SOUTH:
-						var top = feat["bottomright"].y-1
-						var bottom = feat["bottomright"].y-1-length
+						var top = feat["bottomright"].y+1
+						var bottom = feat["bottomright"].y+1+length
 						
 						newFeat["topleft"] = Vector2(left, top)
 						newFeat["bottomright"] = Vector2(left, bottom)
@@ -195,8 +198,8 @@ func propagate(feat, params):
 					
 					if randi()%4 == 1:
 						newFeat["type"] = "corridor_NS"
-						newFeat["topleft"] = Vector2(feat.x, feat.y - 1 - length)
-						newFeat["bottomright"] = Vector2(feat.x, feat.y - 1)
+						newFeat["topleft"] = Vector2(feat["topleft"].x, feat["topleft"].y - 1 - length)
+						newFeat["bottomright"] = Vector2(feat["topleft"].x, feat["topleft"].y - 1)
 					else:
 						newFeat["type"] = "corridor_EW"
 						
@@ -229,8 +232,8 @@ func propagate(feat, params):
 					
 					if randi()%4 == 1:
 						newFeat["type"] = "corridor_NS"
-						newFeat["topleft"] = Vector2(feat.x, feat.y + 1)
-						newFeat["bottomright"] = Vector2(feat.x, feat.y + 1 + length)
+						newFeat["topleft"] = Vector2(feat["topleft"].x, feat["bottomright"].y + 1)
+						newFeat["bottomright"] = Vector2(feat["topleft"].x, feat["bottomright"].y + 1 + length)
 					else:
 						newFeat["type"] = "corridor_EW"
 						
@@ -254,31 +257,127 @@ func propagate(feat, params):
 					newFeat["topleft"] = Vector2(left, top)
 					newFeat["bottomright"] = Vector2(right, bottom)
 			elif face == EAST:
-				pass
+				## TODO: something is wrong with this
 				
 				#EW corridor is the only option
-				#newFeat["type"] = "corridor_EW"
-				#var length = randi()%(params["maxDim"]-params["minDim"]) + params["minDim"]
+				newFeat["type"] = "corridor_EW"
+				var length = randi()%(params["maxDim"]-params["minDim"]) + params["minDim"]
 				
-				#var top = randi()%int(feat["bottomright"].y - feat["topleft"].y) + feat["topleft"].y
+				var left = feat["topleft"].x + 1
+				var right = left + length
 				
-				#newFeat["topleft"] = Vector2(feat["topleft"].x + 1, top)
-				#newFeat["bottomright"] = Vector2(feat["topleft"].x + 1 + length, top)
+				var top = randi()%(int(feat["bottomright"].y - feat["topleft"].y)) + feat["topleft"].y
+				var bottom = top
+				
+				newFeat["topleft"] = Vector2(left, top)
+				newFeat["bottomright"] = Vector2(right, bottom)
 				
 			elif face == WEST:
-				pass
+				## TODO: something is wrong with this
 				
 				#EW corridor is the only option
-				#newFeat["type"] = "corridor_EW"
-				#var length = randi()%(params["maxDim"]-params["minDim"]) + params["minDim"]
+				newFeat["type"] = "corridor_EW"
+				var length = randi()%(params["maxDim"]-params["minDim"]) + params["minDim"]
 				
-				#var top = randi()%int(feat["bottomright"].y - feat["topleft"].y) + feat["topleft"].y
+				var right = feat["topleft"].x - 1
+				var left = right + length
 				
-				#newFeat["topleft"] = Vector2(feat["topleft"].x - 1 - length, top)
-				#newFeat["bottomright"] = Vector2(feat["topleft"].x -1, top)
+				var top = randi()%(int(feat["bottomright"].y - feat["topleft"].y)) + feat["topleft"].y
+				var bottom = top
+				
+				newFeat["topleft"] = Vector2(left, top)
+				newFeat["bottomright"] = Vector2(right, bottom)
 			
 		elif feat["type"] == "corridor_EW":
-			pass
+			face = randi()%4
+			
+			if face == NORTH:
+				# NS corridor is only option
+				newFeat["type"] = "corridor_NS"
+				var length = randi()%(params["maxDim"]-params["minDim"]) + params["minDim"]
+				
+				var bottom = feat["topleft"].y-1
+				var top = bottom - length
+				
+				var left = randi()%(int(feat["bottomright"].x - feat["topleft"].x)) + feat["topleft"].x
+				
+				newFeat["topleft"] = Vector2(left, top)
+				newFeat["bottomright"] = Vector2(left, bottom)
+				
+			elif face == SOUTH:
+				newFeat["type"] = "corridor_NS"
+				var length = randi()%(params["maxDim"]-params["minDim"]) + params["minDim"]
+				
+				var top = feat["topleft"].y + 1
+				var bottom = top + length
+				
+				var left = randi()%(int(feat["bottomright"].x - feat["topleft"].x)) + feat["topleft"].x
+				
+				newFeat["topleft"] = Vector2(left, top)
+				newFeat["bottomright"] = Vector2(left, bottom)
+				
+			elif face == EAST:
+				# let's say that there's a 75% chance of a room ending a corridor
+				# otherwise, it's another corridor
+				if randi()%4 == 1: # corridor, can be NS or EW (but more likely EW
+					var length = randi()%(params["maxDim"]-params["minDim"]) + params["minDim"]
+					
+					if randi()%4 == 1:
+						newFeat["type"] = "corridor_EW"
+						newFeat["topleft"] = Vector2(feat["topleft"].x + 1, feat["topleft"].y)
+						newFeat["bottomright"] = Vector2(feat["topleft"].x + 1 + length, feat["topleft"].y)
+					else:
+						newFeat["type"] = "corridor_NS"
+						
+						var top = feat["topleft"].y - randi()%length
+						newFeat["topleft"] = Vector2(feat["topleft"].x + 1, top)
+						newFeat["bottomright"] = Vector2(feat["topleft"].x + 1, top + length)
+					
+					
+				else: # room
+					newFeat["type"] = "room"
+					
+					var size = Vector2(((randi()%(params["maxDim"]-params["minDim"])) + params["minDim"]), ((randi()%(params["maxDim"]-params["minDim"])) + params["minDim"]))
+					
+					var left = feat["bottomright"].x + 1
+					var right = left + size.x
+					
+					var top = feat["topleft"].y - randi()%int(size.y)
+					var bottom = top + size.y
+
+					newFeat["topleft"] = Vector2(left, top)
+					newFeat["bottomright"] = Vector2(right, bottom)
+			elif face == WEST:
+				# let's say that there's a 75% chance of a room ending a corridor
+				# otherwise, it's another corridor
+				if randi()%4 == 1: # corridor, can be NS or EW (but more likely EW
+					var length = randi()%(params["maxDim"]-params["minDim"]) + params["minDim"]
+					
+					if randi()%4 == 1:
+						newFeat["type"] = "corridor_EW"
+						newFeat["topleft"] = Vector2(feat["topleft"].x - 1 - length, feat["topleft"].y)
+						newFeat["bottomright"] = Vector2(feat["topleft"].x - 1 - length, feat["topleft"].y)
+					else:
+						newFeat["type"] = "corridor_NS"
+						
+						var top = feat["topleft"].y - randi()%length
+						newFeat["topleft"] = Vector2(feat["topleft"].x - 1, top)
+						newFeat["bottomright"] = Vector2(feat["topleft"].x - 1, top + length)
+					
+					
+				else: # room
+					newFeat["type"] = "room"
+					
+					var size = Vector2(((randi()%(params["maxDim"]-params["minDim"])) + params["minDim"]), ((randi()%(params["maxDim"]-params["minDim"])) + params["minDim"]))
+					
+					var right = feat["bottomright"].x - 1
+					var left = right - size.x
+					
+					var top = feat["topleft"].y - randi()%int(size.y)
+					var bottom = top + size.y
+
+					newFeat["topleft"] = Vector2(left, top)
+					newFeat["bottomright"] = Vector2(right, bottom)
 		
 		# now we have a new feature described
 		# we need to check that it will fit into the described space
@@ -288,7 +387,8 @@ func propagate(feat, params):
 			print("feature accepted!")
 			print(newFeat)
 			draw_feature(newFeat)
-			propagate(newFeat, params)
+			cont = false
+			var t = propagate(newFeat, params)
 
 
 # checks the area feat will occupy,
