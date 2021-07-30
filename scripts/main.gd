@@ -105,8 +105,9 @@ func _process(delta):
 			
 			if !(item == null):
 				if(item.type == "stairs"):
-					# TODO: reset level
-					pass
+					map.new_floor()
+					player.pos = map.get_open_tile()
+					player.position = map2screen(player.pos)
 				else:
 					allInputLocked = true
 					player.pickup_item(item)

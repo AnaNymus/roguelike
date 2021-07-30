@@ -5,6 +5,13 @@ extends Node2D
 #position of player in map coordinates
 var pos = Vector2(1, 1)
 
+# STATS
+var hp = 30
+var maxhp = 30
+
+var hunger = 100
+var maxhunger = 100
+
 #main node
 var main
 

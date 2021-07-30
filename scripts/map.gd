@@ -30,6 +30,24 @@ func _ready():
 	gen_items(5)
 	place_stairs()
 
+# NOTE: retains old map size
+func new_floor():
+	# delete old floor
+	self.remove_child(self.get_node("TileMap"))
+	
+	# delete remaining items
+	delete_items()
+	itemMap = create_2d_array(mapSize)
+	
+	# generate new floorplan
+	get_new_map(mapSize)
+	
+	# place new items
+	gen_items(5)
+	
+	# place new stairs
+	place_stairs()
+
 ## UTILITY FUNCTIONs ##
 
 # builds an empty 2D array
@@ -76,6 +94,9 @@ func get_new_map(size):
 	
 	
 
+func delete_items():
+	for item in items.get_children():
+		item.get_parent().remove_child(item)
 
 # randomly places NUM items on accessible areas of the floor
 # TODO: later, this should take a dictionary of item IDs and
