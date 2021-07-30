@@ -70,7 +70,7 @@ func pickup_item(item):
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _physics_process(delta):
 	
 	# countdown animationTimer if it has been set
 	# if it reaches 0, reset the clock

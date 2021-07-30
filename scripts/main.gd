@@ -74,7 +74,7 @@ func get_player_input():
 
 
 # called every frame
-func _process(delta):
+func _physics_process(delta):
 	var input = get_player_input()
 	
 	# if there was player input, carry it out
