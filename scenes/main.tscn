@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://sprites/tileset.png" type="Texture" id=1]
 [ext_resource path="res://sprites/roguelike test sprite.png" type="Texture" id=2]
 [ext_resource path="res://scripts/player.gd" type="Script" id=3]
 [ext_resource path="res://scripts/main.gd" type="Script" id=4]
 [ext_resource path="res://scripts/map.gd" type="Script" id=5]
+[ext_resource path="res://scenes/stairs.tscn" type="PackedScene" id=6]
 
 [sub_resource type="TileSet" id=1]
 0/name = "floor"
@@ -36,6 +37,14 @@ script = ExtResource( 5 )
 
 [node name="items" type="Node2D" parent="map"]
 z_index = 1
+
+[node name="static_tiles" type="Node2D" parent="map"]
+
+[node name="up_stairs" parent="map/static_tiles" instance=ExtResource( 6 )]
+visible = false
+
+[node name="down_stairs" parent="map/static_tiles" instance=ExtResource( 6 )]
+position = Vector2( 221.184, 55.0993 )
 
 [node name="player" type="Node2D" parent="."]
 position = Vector2( 32, 32 )

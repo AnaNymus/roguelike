@@ -4,6 +4,7 @@ extends Node2D
 # the tilemap object
 var tilemap
 var items
+var static_tiles
 
 # the size of the map (# of tiles in each direction)
 var mapSize
@@ -21,11 +22,13 @@ func _ready():
 	get_new_map(mapSize)
 	items = self.get_node("items")
 	
+	static_tiles = self.get_node("static_tiles")
 	
 	
 	itemMap = create_2d_array(mapSize)
 	# set items in place
 	gen_items(5)
+	place_stairs()
 
 ## UTILITY FUNCTIONs ##
 
@@ -94,6 +97,19 @@ func gen_items(num):
 			itemMap[vec.x][vec.y] = item
 			countdown -= 1
 	
+func place_stairs():
+	# TODO: keep things from overlapping!!!
+	var vec = get_open_tile()
+	#static_tiles.get_node("up_stairs").position = tilemap.map_to_world(vec)
+	#static_tiles.get_node("up_stairs").setas_up()
+	#itemMap[vec.x][vec.y] = static_tiles.get_node("up_stairs")
+	
+	vec = get_open_tile()
+	static_tiles.get_node("down_stairs").position = tilemap.map_to_world(vec)
+	static_tiles.get_node("down_stairs").setas_down()
+	itemMap[vec.x][vec.y] = static_tiles.get_node("down_stairs")
+	
+
 
 func get_open_tile():
 	while true:

@@ -104,6 +104,10 @@ func _process(delta):
 			var item = map.check_for_interactive(player.get_pos())
 			
 			if !(item == null):
-				allInputLocked = true
-				player.pickup_item(item)
+				if(item.type == "stairs"):
+					# TODO: reset level
+					pass
+				else:
+					allInputLocked = true
+					player.pickup_item(item)
 			
