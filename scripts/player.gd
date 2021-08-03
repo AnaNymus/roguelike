@@ -1,9 +1,16 @@
 extends Node2D
 
+const UP = 1
+const DOWN = 2
+const RIGHT = 3
+const LEFT = 4
+
 ## VARIABLES
 
 #position of player in map coordinates
 var pos = Vector2(1, 1)
+# direction the player is facing
+var dir = 1
 
 # STATS
 var hp = 30
@@ -31,6 +38,10 @@ func _ready():
 ## UTILITY FUNCTIONS
 func get_pos():
 	return pos
+
+func change_dir(d):
+	dir = d
+	self.get_node("Sprite").frame = dir - 1
 
 ## MOVEMENT FUNCTIONS
 

@@ -67,6 +67,7 @@ smoothing_speed = 10.0
 texture = ExtResource( 2 )
 centered = false
 offset = Vector2( 0, -32 )
+vframes = 4
 
 [node name="enemies" type="Node2D" parent="."]
 
