@@ -67,6 +67,10 @@ func hunger_tick():
 
 	update_status_panel()
 
+func change_dir(d):
+	dir = d
+	self.get_node("Sprite").frame = dir - 1
+
 ## MOVEMENT FUNCTIONS
 
 func move_up():

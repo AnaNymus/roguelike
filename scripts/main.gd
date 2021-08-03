@@ -114,5 +114,6 @@ func _physics_process(delta):
 					player.position = map2screen(player.pos)
 				else:
 					allInputLocked = true
+					map.itemMap[screen2map(item.position).x][screen2map(item.position).y] = null
 					player.pickup_item(item)
 			
