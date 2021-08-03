@@ -19,8 +19,12 @@ var maxhp = 30
 var hunger = 100
 var maxhunger = 100
 
+const HUNGER_TURNS = 5
+var hungerCounter = 0
+
 #main node
 var main
+var status
 
 # timers
 # TODO: may not be best here
@@ -32,16 +36,36 @@ var bag = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
+
 	main = self.get_parent()
+	status = self.get_node("status_panel")
+
+	update_status_panel()
+
 
 ## UTILITY FUNCTIONS
 func get_pos():
 	return pos
 
-func change_dir(d):
-	dir = d
-	self.get_node("Sprite").frame = dir - 1
+## STATUS UPDATE FUNCTIONS
+func update_status_panel():
+	status.get_node("hp_label").text = "HP: " + str(hp) + " / " + str(maxhp)
+	status.get_node("hunger_label").text = "Hunger: " + str(hunger) + " / " + str(maxhunger)
+
+# when an action is performed, make hunger tick down by one
+# TODO: when hunger = 0, what happens?
+func hunger_tick():
+	hungerCounter += 1
+
+	if hungerCounter >= HUNGER_TURNS:
+		hungerCounter = 0
+		hunger = hunger - 1
+
+	if hunger <= 0:
+		hunger = 0
+		# DO SOMETHING ELSE
+
+	update_status_panel()
 
 ## MOVEMENT FUNCTIONS
 
@@ -49,6 +73,7 @@ func move_up():
 	animationTimer = animationTimerMax
 	pos.y = pos.y - 1
 	position = main.map2screen(pos)
+	hunger_tick()
 	#print(pos)
 
 
@@ -56,18 +81,21 @@ func move_down():
 	animationTimer = animationTimerMax
 	pos.y = pos.y + 1
 	position = main.map2screen(pos)
+	hunger_tick()
 	#print(pos)
 
 func move_left():
 	animationTimer = animationTimerMax
 	pos.x = pos.x - 1
 	position = main.map2screen(pos)
+	hunger_tick()
 	#print(pos)
 
 func move_right():
 	animationTimer = animationTimerMax
 	pos.x = pos.x + 1
 	position = main.map2screen(pos)
+	hunger_tick()
 	#print(pos)
 
 ## INTERACT FUNCTIONS
@@ -78,15 +106,17 @@ func pickup_item(item):
 	bag.append(item)
 	# remove item from world map
 	item.get_parent().remove_child(item)
-	
+
+	hunger_tick()
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	
+
 	# countdown animationTimer if it has been set
 	# if it reaches 0, reset the clock
 	if animationTimer > 0:
 		animationTimer = animationTimer - delta
-		
+
 		if animationTimer < 0:
 			main.allInputLocked = false
