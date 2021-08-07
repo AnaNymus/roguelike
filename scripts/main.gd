@@ -84,18 +84,22 @@ func _physics_process(delta):
 		
 		# move buttons
 		if input == PRESS_UP:
+			player.change_dir(1)
 			if map.check_pos(player.get_pos() + Vector2(0, -1)):
 				allInputLocked = true
 				player.move_up()
 		elif input == PRESS_DOWN:
+			player.change_dir(2)
 			if map.check_pos(player.get_pos() + Vector2(0, 1)):
 				allInputLocked = true
 				player.move_down()
 		elif input == PRESS_LEFT:
+			player.change_dir(4)
 			if map.check_pos(player.get_pos() + Vector2(-1, 0)):
 				allInputLocked = true
 				player.move_left()
 		elif input == PRESS_RIGHT:
+			player.change_dir(3)
 			if map.check_pos(player.get_pos() + Vector2(1, 0)):
 				allInputLocked = true
 				player.move_right()
@@ -110,5 +114,6 @@ func _physics_process(delta):
 					player.position = map2screen(player.pos)
 				else:
 					allInputLocked = true
+					map.itemMap[screen2map(item.position).x][screen2map(item.position).y] = null
 					player.pickup_item(item)
 			

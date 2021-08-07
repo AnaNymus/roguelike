@@ -59,6 +59,7 @@ smoothing_speed = 10.0
 texture = ExtResource( 2 )
 centered = false
 offset = Vector2( 0, -32 )
+vframes = 4
 
 [node name="status_panel" type="Panel" parent="player"]
 margin_left = -500.0
