@@ -104,7 +104,7 @@ func delete_items():
 # for now, it will just place the generic item "item"
 func gen_items(num):
 	var countdown = num
-	var i = preload("res://scenes/item.tscn")
+	var i = preload("res://scenes/botannical.tscn")
 	
 	while countdown > 0:
 		var vec = Vector2(randi()%int(mapSize.x), randi()%int(mapSize.y))

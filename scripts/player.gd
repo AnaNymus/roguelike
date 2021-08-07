@@ -25,7 +25,7 @@ var animationTimer = 0
 var animationTimerMax = 0.2
 
 # TODO: more advanced later
-var bag = []
+var bag = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -95,8 +95,14 @@ func move_right():
 
 func pickup_item(item):
 	animationTimer = animationTimerMax
+	
 	# put item in bag
-	bag.append(item)
+	# TODO: item details should be stored in main
+	if bag.has(item.type):
+		bag[item.type] += 1
+	else:
+		bag[item.type] = 1
+		
 	# remove item from world map
 	item.get_parent().remove_child(item)
 	
