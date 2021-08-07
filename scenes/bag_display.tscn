@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripts/bag_display.gd" type="Script" id=1]
+
+[node name="bag_display" type="Panel"]
+margin_left = 110.681
+margin_top = 74.3635
+margin_right = 886.681
+margin_bottom = 501.364
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="close" type="Button" parent="."]
+margin_left = 665.479
+margin_top = 393.458
+margin_right = 760.479
+margin_bottom = 413.458
+text = "Close Bag"
+[connection signal="pressed" from="close" to="." method="_on_close_pressed"]
