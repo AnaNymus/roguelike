@@ -17,6 +17,20 @@ const PRESS_DOWN = 2
 const PRESS_RIGHT = 3
 const PRESS_LEFT = 4
 const SELECT = 5
+const PRESS_UP_LEFT = 6
+const PRESS_DOWN_LEFT = 7
+const PRESS_UP_RIGHT = 8
+const PRESS_DOWN_RIGHT = 9
+
+# character direction codes
+const FRONT = 0
+const FRONT_LEFT = 1
+const LEFT = 2
+const BACK_LEFT = 3
+const BACK = 4
+const BACK_RIGHT = 5
+const RIGHT = 6
+const FRONT_RIGHT = 7
 
 ### VARIABLES ###
 
@@ -57,9 +71,19 @@ func get_player_input():
 		## TODO: what is priority order for inputs?
 		
 		if Input.is_action_pressed("ui_up"):
-			return PRESS_UP
+			if Input.is_action_pressed("ui_left"):
+				return PRESS_UP_LEFT
+			elif Input.is_action_pressed("ui_right"):
+				return PRESS_UP_RIGHT
+			else:
+				return PRESS_UP
 		elif Input.is_action_pressed("ui_down"):
-			return PRESS_DOWN
+			if Input.is_action_pressed("ui_left"):
+				return PRESS_DOWN_LEFT
+			elif Input.is_action_pressed("ui_right"):
+				return PRESS_DOWN_RIGHT
+			else:
+				return PRESS_DOWN
 		elif Input.is_action_pressed("ui_left"):
 			return PRESS_LEFT
 		elif Input.is_action_pressed("ui_right"):
@@ -84,25 +108,46 @@ func _physics_process(delta):
 		
 		# move buttons
 		if input == PRESS_UP:
-			player.change_dir(1)
+			player.change_dir(BACK)
 			if map.check_pos(player.get_pos() + Vector2(0, -1)):
 				allInputLocked = true
 				player.move_up()
 		elif input == PRESS_DOWN:
-			player.change_dir(2)
+			player.change_dir(FRONT)
 			if map.check_pos(player.get_pos() + Vector2(0, 1)):
 				allInputLocked = true
 				player.move_down()
 		elif input == PRESS_LEFT:
-			player.change_dir(4)
+			player.change_dir(LEFT)
 			if map.check_pos(player.get_pos() + Vector2(-1, 0)):
 				allInputLocked = true
 				player.move_left()
 		elif input == PRESS_RIGHT:
-			player.change_dir(3)
+			player.change_dir(RIGHT)
 			if map.check_pos(player.get_pos() + Vector2(1, 0)):
 				allInputLocked = true
 				player.move_right()
+		## TODO: player should not be able to clip corners
+		elif input == PRESS_UP_LEFT:
+			player.change_dir(BACK_LEFT)
+			if map.check_pos(player.get_pos() + Vector2(-1, -1)):
+				allInputLocked = true
+				player.move_up_left()
+		elif input == PRESS_UP_RIGHT:
+			player.change_dir(BACK_RIGHT)
+			if map.check_pos(player.get_pos() + Vector2(1, -1)):
+				allInputLocked = true
+				player.move_up_right()
+		elif input == PRESS_DOWN_LEFT:
+			player.change_dir(FRONT_LEFT)
+			if map.check_pos(player.get_pos() + Vector2(-1, 1)):
+				allInputLocked = true
+				player.move_down_left()
+		elif input == PRESS_DOWN_RIGHT:
+			player.change_dir(FRONT_RIGHT)
+			if map.check_pos(player.get_pos() + Vector2(1, 1)):
+				allInputLocked = true
+				player.move_down_right()
 		# interact
 		elif input == SELECT:
 			var item = map.check_for_interactive(player.get_pos())

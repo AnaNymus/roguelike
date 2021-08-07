@@ -1,9 +1,13 @@
 extends Node2D
 
-const UP = 1
-const DOWN = 2
-const RIGHT = 3
-const LEFT = 4
+const FRONT = 0
+const FRONT_LEFT = 1
+const LEFT = 2
+const BACK_LEFT = 3
+const BACK = 4
+const BACK_RIGHT = 5
+const RIGHT = 6
+const FRONT_RIGHT = 7
 
 ## VARIABLES
 
@@ -69,7 +73,7 @@ func hunger_tick():
 
 func change_dir(d):
 	dir = d
-	self.get_node("Sprite").frame = dir - 1
+	self.get_node("Sprite").frame = dir
 
 ## MOVEMENT FUNCTIONS
 
@@ -101,6 +105,34 @@ func move_right():
 	position = main.map2screen(pos)
 	hunger_tick()
 	#print(pos)
+
+func move_up_right():
+	animationTimer = animationTimerMax
+	pos.x = pos.x + 1
+	pos.y = pos.y - 1
+	position = main.map2screen(pos)
+	hunger_tick()
+
+func move_down_right():
+	animationTimer = animationTimerMax
+	pos.x = pos.x + 1
+	pos.y = pos.y + 1
+	position = main.map2screen(pos)
+	hunger_tick()
+
+func move_up_left():
+	animationTimer = animationTimerMax
+	pos.x = pos.x - 1
+	pos.y = pos.y - 1
+	position = main.map2screen(pos)
+	hunger_tick()
+
+func move_down_left():
+	animationTimer = animationTimerMax
+	pos.x = pos.x - 1
+	pos.y = pos.y + 1
+	position = main.map2screen(pos)
+	hunger_tick()
 
 ## INTERACT FUNCTIONS
 
