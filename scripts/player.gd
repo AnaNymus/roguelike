@@ -14,7 +14,7 @@ const FRONT_RIGHT = 7
 #position of player in map coordinates
 var pos = Vector2(1, 1)
 # direction the player is facing
-var dir = 1
+var dir = FRONT
 
 # STATS
 var hp = 30
@@ -151,6 +151,25 @@ func pickup_item(item):
 
 	hunger_tick()
 
+# returns the pos of the tile directly in front of player
+func which_tile_facing():
+	if dir == FRONT:
+		return pos + Vector2(0, 1)
+	elif dir == FRONT_LEFT:
+		return pos + Vector2(-1, 1)
+	elif dir == LEFT:
+		return pos + Vector2(-1, 0)
+	elif dir == BACK_LEFT:
+		return pos + Vector2(-1, -1)
+	elif dir == BACK:
+		return pos + Vector2(0, -1)
+	elif dir == BACK_RIGHT:
+		return pos + Vector2(1, -1)
+	elif dir == RIGHT:
+		return pos + Vector2(1, 0)
+	elif dir == FRONT_RIGHT:
+		return pos + Vector2(1, 1)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):

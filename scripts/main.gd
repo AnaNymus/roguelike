@@ -21,6 +21,8 @@ const PRESS_UP_LEFT = 6
 const PRESS_DOWN_LEFT = 7
 const PRESS_UP_RIGHT = 8
 const PRESS_DOWN_RIGHT = 9
+const INTERACT = 10
+const MELEE_ATTACK = 11
 
 # character direction codes
 const FRONT = 0
@@ -90,6 +92,8 @@ func get_player_input():
 			return PRESS_RIGHT
 		elif Input.is_action_pressed("ui_select"):
 			return SELECT
+		elif Input.is_action_pressed("ui_interact"):
+			return INTERACT
 		else:
 			return -1
 	else:
@@ -161,4 +165,21 @@ func _physics_process(delta):
 					allInputLocked = true
 					map.itemMap[screen2map(item.position).x][screen2map(item.position).y] = null
 					player.pickup_item(item)
+		elif input == INTERACT:
+			## TODO: this function is general-purpose and needs to be expanded
+			# for now, it should just print out whatever item is in front of the player
+			# in the future, it will be the function for speaking to entities
+			# opening doors/chests, etc
+			var w = player.which_tile_facing()
+			print(map.itemMap[w.x][w.y])
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+		elif input == MELEE_ATTACK:
+			var w = player.which_tile_facing()
+			## TODO: this will be the general purpose function for attacking an enemy with a melee weapon
+			# the item in the player's hand will be used to calculate damage
+			# non-weapon items will default to 1 damage, but may have additional effects
+			# items with the tag "fragile" break if being used this way
+			# the action fails if there is no enemy or other entity in the tile the player faces. 
+			# in this case, fragile items do not break, and a turn is not used up (we'll be nice)
 			
