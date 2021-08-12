@@ -94,6 +94,8 @@ func get_player_input():
 			return SELECT
 		elif Input.is_action_pressed("ui_interact"):
 			return INTERACT
+		elif Input.is_action_pressed("ui_attack"):
+			return MELEE_ATTACK
 		else:
 			return -1
 	else:
@@ -175,7 +177,14 @@ func _physics_process(delta):
 			allInputLocked = true
 			player.animationTimer = player.animationTimerMax
 		elif input == MELEE_ATTACK:
+			print("attack")
 			var w = player.which_tile_facing()
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+			var i = preload("res://scenes/melee_attack.tscn")
+			var at = i.instance()
+			self.add_child(at)
+			at.position = map2screen(w)
 			## TODO: this will be the general purpose function for attacking an enemy with a melee weapon
 			# the item in the player's hand will be used to calculate damage
 			# non-weapon items will default to 1 damage, but may have additional effects

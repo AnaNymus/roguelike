@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/roguelike test sprite.png-5c1c30405cee9bc6813b050627000efc.stex"
+path="res://.import/slash.png-310a6f6ecd3a97c85098b181a20aad43.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/roguelike test sprite.png"
-dest_files=[ "res://.import/roguelike test sprite.png-5c1c30405cee9bc6813b050627000efc.stex" ]
+source_file="res://sprites/slash.png"
+dest_files=[ "res://.import/slash.png-310a6f6ecd3a97c85098b181a20aad43.stex" ]
 
 [params]
 
