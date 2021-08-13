@@ -115,45 +115,53 @@ func _physics_process(delta):
 		# move buttons
 		if input == PRESS_UP:
 			player.change_dir(BACK)
-			if map.check_pos(player.get_pos() + Vector2(0, -1)):
-				allInputLocked = true
-				player.move_up()
+			if not map.check_for_features(player.which_tile_facing()):
+				if map.check_pos(player.get_pos() + Vector2(0, -1)):
+					allInputLocked = true
+					player.move_up()
 		elif input == PRESS_DOWN:
 			player.change_dir(FRONT)
-			if map.check_pos(player.get_pos() + Vector2(0, 1)):
-				allInputLocked = true
-				player.move_down()
+			if not map.check_for_features(player.which_tile_facing()):
+				if map.check_pos(player.get_pos() + Vector2(0, 1)):
+					allInputLocked = true
+					player.move_down()
 		elif input == PRESS_LEFT:
 			player.change_dir(LEFT)
-			if map.check_pos(player.get_pos() + Vector2(-1, 0)):
-				allInputLocked = true
-				player.move_left()
+			if not map.check_for_features(player.which_tile_facing()):
+				if map.check_pos(player.get_pos() + Vector2(-1, 0)):
+					allInputLocked = true
+					player.move_left()
 		elif input == PRESS_RIGHT:
 			player.change_dir(RIGHT)
-			if map.check_pos(player.get_pos() + Vector2(1, 0)):
-				allInputLocked = true
-				player.move_right()
+			if not map.check_for_features(player.which_tile_facing()):
+				if map.check_pos(player.get_pos() + Vector2(1, 0)):
+					allInputLocked = true
+					player.move_right()
 		## TODO: player should not be able to clip corners
 		elif input == PRESS_UP_LEFT:
 			player.change_dir(BACK_LEFT)
-			if map.check_pos(player.get_pos() + Vector2(-1, -1)):
-				allInputLocked = true
-				player.move_up_left()
+			if not map.check_for_features(player.which_tile_facing()):
+				if map.check_pos(player.get_pos() + Vector2(-1, -1)):
+					allInputLocked = true
+					player.move_up_left()
 		elif input == PRESS_UP_RIGHT:
 			player.change_dir(BACK_RIGHT)
-			if map.check_pos(player.get_pos() + Vector2(1, -1)):
-				allInputLocked = true
-				player.move_up_right()
+			if not map.check_for_features(player.which_tile_facing()):
+				if map.check_pos(player.get_pos() + Vector2(1, -1)):
+					allInputLocked = true
+					player.move_up_right()
 		elif input == PRESS_DOWN_LEFT:
 			player.change_dir(FRONT_LEFT)
-			if map.check_pos(player.get_pos() + Vector2(-1, 1)):
-				allInputLocked = true
-				player.move_down_left()
+			if not map.check_for_features(player.which_tile_facing()):
+				if map.check_pos(player.get_pos() + Vector2(-1, 1)):
+					allInputLocked = true
+					player.move_down_left()
 		elif input == PRESS_DOWN_RIGHT:
 			player.change_dir(FRONT_RIGHT)
-			if map.check_pos(player.get_pos() + Vector2(1, 1)):
-				allInputLocked = true
-				player.move_down_right()
+			if not map.check_for_features(player.which_tile_facing()):
+				if map.check_pos(player.get_pos() + Vector2(1, 1)):
+					allInputLocked = true
+					player.move_down_right()
 		# interact
 		elif input == SELECT:
 			var item = map.check_for_interactive(player.get_pos())
@@ -174,6 +182,7 @@ func _physics_process(delta):
 			# opening doors/chests, etc
 			var w = player.which_tile_facing()
 			print(map.itemMap[w.x][w.y])
+			print(map.featureMap[w.x][w.y])
 			allInputLocked = true
 			player.animationTimer = player.animationTimerMax
 		elif input == MELEE_ATTACK:
@@ -185,6 +194,13 @@ func _physics_process(delta):
 			var at = i.instance()
 			self.add_child(at)
 			at.position = map2screen(w)
+			
+			var f = map.check_for_features(w)
+			
+			if f:
+				var feat = map.featureMap[w.x][w.y]
+				if feat.type == "tree":
+					feat.take_damage(5)
 			## TODO: this will be the general purpose function for attacking an enemy with a melee weapon
 			# the item in the player's hand will be used to calculate damage
 			# non-weapon items will default to 1 damage, but may have additional effects

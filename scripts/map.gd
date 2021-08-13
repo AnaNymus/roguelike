@@ -11,6 +11,7 @@ var mapSize
 
 # an array detailing what items are in what cells
 var itemMap
+var featureMap
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -26,8 +27,10 @@ func _ready():
 	
 	
 	itemMap = create_2d_array(mapSize)
+	featureMap = create_2d_array(mapSize)
 	# set items in place
 	gen_items(5)
+	gen_features(5)
 	place_stairs()
 
 # NOTE: retains old map size
@@ -37,13 +40,16 @@ func new_floor():
 	
 	# delete remaining items
 	delete_items()
+	delete_features()
 	itemMap = create_2d_array(mapSize)
+	featureMap = create_2d_array(mapSize)
 	
 	# generate new floorplan
 	get_new_map(mapSize)
 	
 	# place new items
 	gen_items(5)
+	gen_features(5)
 	
 	# place new stairs
 	place_stairs()
@@ -74,6 +80,13 @@ func check_pos(pos):
 	else:
 		return false
 
+func check_for_features(pos):
+	var t = featureMap[pos.x][pos.y]
+	if t == null:
+		return false
+	else:
+		return true
+
 # checks item map for interactive elements (items, etc.)
 func check_for_interactive(pos):
 	# TODO: there will be multiple classes of interactive item later
@@ -98,6 +111,17 @@ func delete_items():
 	for item in items.get_children():
 		item.get_parent().remove_child(item)
 
+func delete_features():
+	for feat in static_tiles.get_children():
+		if not feat.type == "stairs":
+			feat.get_parent().remove_child(feat)
+
+
+func remove_feature(pos):
+	var feat = featureMap[pos.x][pos.y]
+	featureMap[pos.x][pos.y] = null
+	self.get_node("static_tiles").remove_child(feat)
+
 # randomly places NUM items on accessible areas of the floor
 # TODO: later, this should take a dictionary of item IDs and
 # the number of each that should be placed
@@ -116,6 +140,22 @@ func gen_items(num):
 			items.add_child(item)
 			item.position = tilemap.map_to_world(vec)
 			itemMap[vec.x][vec.y] = item
+			countdown -= 1
+	
+func gen_features(num):
+	var countdown = num
+	var i = preload("res://scenes/feature.tscn")
+	
+	while countdown > 0:
+		var vec = Vector2(randi()%int(mapSize.x), randi()%int(mapSize.y))
+		
+		if check_pos(vec):
+			#TODO check that map elements don't overlap
+			print(vec)
+			var item = i.instance()
+			static_tiles.add_child(item)
+			item.position = tilemap.map_to_world(vec)
+			featureMap[vec.x][vec.y] = item
 			countdown -= 1
 	
 func place_stairs():

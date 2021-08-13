@@ -40,15 +40,12 @@ z_index = 1
 
 [node name="static_tiles" type="Node2D" parent="map"]
 
-[node name="up_stairs" parent="map/static_tiles" instance=ExtResource( 6 )]
-visible = false
-
 [node name="down_stairs" parent="map/static_tiles" instance=ExtResource( 6 )]
 position = Vector2( 221.184, 55.0993 )
 
 [node name="player" type="Node2D" parent="."]
 position = Vector2( 32, 32 )
-z_index = 2
+z_index = 3
 script = ExtResource( 3 )
 
 [node name="Camera2D" type="Camera2D" parent="player"]
