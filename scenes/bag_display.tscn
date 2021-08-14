@@ -3,10 +3,8 @@
 [ext_resource path="res://scripts/bag_display.gd" type="Script" id=1]
 
 [node name="bag_display" type="Panel"]
-margin_left = 110.681
-margin_top = 74.3635
-margin_right = 886.681
-margin_bottom = 501.364
+margin_right = 786.471
+margin_bottom = 436.413
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false

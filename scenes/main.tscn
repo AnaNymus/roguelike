@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://sprites/tileset.png" type="Texture" id=1]
 [ext_resource path="res://sprites/roguelike test sprite.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://scripts/main.gd" type="Script" id=4]
 [ext_resource path="res://scripts/map.gd" type="Script" id=5]
 [ext_resource path="res://scenes/stairs.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/bag_display.tscn" type="PackedScene" id=7]
 
 [sub_resource type="TileSet" id=1]
 0/name = "floor"
@@ -80,6 +81,12 @@ margin_top = 23.0254
 margin_right = 100.153
 margin_bottom = 37.0254
 text = "Hunger: X/100"
+
+[node name="bag_display" parent="player" instance=ExtResource( 7 )]
+margin_left = -399.182
+margin_top = -218.244
+margin_right = 387.289
+margin_bottom = 218.169
 
 [node name="enemies" type="Node2D" parent="."]
 
