@@ -223,7 +223,7 @@ func input_bag(input):
 		# in this case, fragile items do not break, and a turn is not used up (we'll be nice)
 	elif input == OPEN_BAG:
 		mode = "bag"
-		player.get_node("bag_display").visible = true
+		player.get_node("bag_display").on_opened()
 
 # called every frame
 func _physics_process(delta):

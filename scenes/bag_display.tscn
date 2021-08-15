@@ -11,9 +11,38 @@ __meta__ = {
 }
 
 [node name="close" type="Button" parent="."]
-margin_left = 665.479
-margin_top = 393.458
-margin_right = 760.479
-margin_bottom = 413.458
+margin_left = 669.738
+margin_top = 401.977
+margin_right = 764.738
+margin_bottom = 421.977
 text = "Close Bag"
+
+[node name="ItemList" type="ItemList" parent="."]
+margin_left = 146.288
+margin_top = 30.1945
+margin_right = 317.288
+margin_bottom = 414.194
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="info" type="Panel" parent="."]
+margin_left = 351.0
+margin_top = 30.0
+margin_right = 752.0
+margin_bottom = 388.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="pockets" type="ItemList" parent="."]
+margin_left = 18.0
+margin_top = 33.0
+margin_right = 135.0
+margin_bottom = 407.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="close" to="." method="_on_close_pressed"]
+[connection signal="item_activated" from="ItemList" to="." method="_on_ItemList_item_activated"]
+[connection signal="item_activated" from="pockets" to="." method="_on_pockets_item_activated"]

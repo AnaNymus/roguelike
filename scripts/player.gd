@@ -145,6 +145,7 @@ func pickup_item(item):
 		bag[item.type] += 1
 	else:
 		bag[item.type] = 1
+		self.get_node("bag_display").new_item(item)
 		
 	# remove item from world map
 	item.get_parent().remove_child(item)

@@ -137,6 +137,7 @@ func gen_items(num):
 			#TODO check that map elements don't overlap
 			
 			var item = i.instance()
+			item.set_item_type("apple")
 			items.add_child(item)
 			item.position = tilemap.map_to_world(vec)
 			itemMap[vec.x][vec.y] = item
