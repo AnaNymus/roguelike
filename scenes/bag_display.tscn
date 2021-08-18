@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/bag_display.gd" type="Script" id=1]
+[ext_resource path="res://sprites/item_bg.png" type="Texture" id=2]
+[ext_resource path="res://sprites/apple_large.png" type="Texture" id=3]
 
 [node name="bag_display" type="Panel"]
 margin_right = 786.471
@@ -27,13 +29,81 @@ __meta__ = {
 }
 
 [node name="info" type="Panel" parent="."]
-margin_left = 351.0
+margin_left = 350.555
 margin_top = 30.0
-margin_right = 752.0
+margin_right = 751.555
 margin_bottom = 388.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="bg" type="Sprite" parent="info"]
+position = Vector2( 108, 108 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 2 )
+
+[node name="item" type="Sprite" parent="info"]
+position = Vector2( 108, 108 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 3 )
+
+[node name="item_name" type="Label" parent="info"]
+margin_left = 10.3826
+margin_top = 221.339
+margin_right = 83.3826
+margin_bottom = 235.339
+text = "Item Name"
+
+[node name="flavor_text" type="Label" parent="info"]
+margin_left = 8.7525
+margin_top = 257.983
+margin_right = 208.753
+margin_bottom = 305.983
+text = "Flavor Text: blah blah blah something something oh look something else"
+autowrap = true
+
+[node name="num_items" type="Label" parent="info"]
+margin_left = 11.2374
+margin_top = 331.126
+margin_right = 66.2374
+margin_bottom = 345.126
+text = "In bag: X"
+
+[node name="effects" type="Label" parent="info"]
+margin_left = 220.96
+margin_top = 8.98984
+margin_right = 266.96
+margin_bottom = 22.9898
+text = "Effects:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="when_eaten" type="Label" parent="info"]
+margin_left = 224.0
+margin_top = 36.0
+margin_right = 415.0
+margin_bottom = 90.0
+text = "When eaten raw:"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="when_cooked" type="Label" parent="info"]
+margin_left = 226.445
+margin_top = 98.0
+margin_right = 413.445
+margin_bottom = 171.0
+text = "When cooked:"
+autowrap = true
+
+[node name="when_brewed" type="Label" parent="info"]
+margin_left = 226.734
+margin_top = 175.507
+margin_right = 318.734
+margin_bottom = 189.507
+text = "When brewed:"
 
 [node name="pockets" type="ItemList" parent="."]
 margin_left = 18.0
