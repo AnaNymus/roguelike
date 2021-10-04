@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://sprites/item.png" type="Texture" id=1]
-[ext_resource path="res://scripts/botannical.gd" type="Script" id=2]
+[ext_resource path="res://scripts/item.gd" type="Script" id=2]
 
-[node name="botannical" type="Node2D"]
+[node name="item" type="Node2D"]
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

@@ -69,7 +69,7 @@ margin_right = 66.2374
 margin_bottom = 345.126
 text = "In bag: X"
 
-[node name="effects" type="Label" parent="info"]
+[node name="effects_label" type="Label" parent="info"]
 margin_left = 220.96
 margin_top = 8.98984
 margin_right = 266.96
@@ -79,7 +79,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="when_eaten" type="Label" parent="info"]
+[node name="effects" type="Label" parent="info"]
 margin_left = 224.0
 margin_top = 36.0
 margin_right = 415.0
@@ -90,20 +90,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="when_cooked" type="Label" parent="info"]
-margin_left = 226.445
-margin_top = 98.0
-margin_right = 413.445
-margin_bottom = 171.0
-text = "When cooked:"
-autowrap = true
-
-[node name="when_brewed" type="Label" parent="info"]
-margin_left = 226.734
-margin_top = 175.507
-margin_right = 318.734
-margin_bottom = 189.507
-text = "When brewed:"
+[node name="use" type="Button" parent="info"]
+margin_left = 226.243
+margin_top = 212.082
+margin_right = 385.243
+margin_bottom = 278.082
+text = "Use!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="pockets" type="ItemList" parent="."]
 margin_left = 18.0

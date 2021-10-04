@@ -36,14 +36,14 @@ var animationTimer = 0
 var animationTimerMax = 0.2
 
 # TODO: more advanced later
-var bag = {}
+var bag
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 
 	main = self.get_parent()
 	status = self.get_node("status_panel")
-
+	bag = self.get_node("bag_display")
 	update_status_panel()
 
 
@@ -141,11 +141,12 @@ func pickup_item(item):
 	
 	# put item in bag
 	# TODO: item details should be stored in main
-	if bag.has(item.type):
-		bag[item.type] += 1
-	else:
-		bag[item.type] = 1
-		self.get_node("bag_display").new_item(item)
+	## NOTE: THIS DOESN"T WORK RN
+	if item.pocket == "botannical":
+		if bag.has_bot(item.type):
+			bag.botannicals[item.type] += 1
+		else:
+			bag[item.type] = 1
 		
 	# remove item from world map
 	item.get_parent().remove_child(item)

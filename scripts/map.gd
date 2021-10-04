@@ -128,7 +128,7 @@ func remove_feature(pos):
 # for now, it will just place the generic item "item"
 func gen_items(num):
 	var countdown = num
-	var i = preload("res://scenes/botannical.tscn")
+	var i = preload("res://scenes/item.tscn")
 	
 	while countdown > 0:
 		var vec = Vector2(randi()%int(mapSize.x), randi()%int(mapSize.y))
@@ -137,7 +137,22 @@ func gen_items(num):
 			#TODO check that map elements don't overlap
 			
 			var item = i.instance()
-			item.set_item_type("apple")
+			
+			var r = randi()%4
+			
+			if r == 0:
+				item.set_item_type("apple")
+				item.set_pocket("botannical")
+				item.set_sprite("res://sprites/apple.png")
+			elif r == 1:
+				item.set_item_type("dandelion")
+				item.set_pocket("botannical")
+				item.set_sprite("res://sprites/dandelion.png")
+			else:
+				item.set_item_type("fern")
+				item.set_pocket("botannical")
+				item.set_sprite("res://sprites/fern.png")
+				
 			items.add_child(item)
 			item.position = tilemap.map_to_world(vec)
 			itemMap[vec.x][vec.y] = item
