@@ -138,7 +138,7 @@ func gen_items(num):
 			
 			var item = i.instance()
 			
-			var r = randi()%4
+			var r = randi()%5
 			
 			if r == 0:
 				item.set_item_type("apple")
@@ -148,6 +148,14 @@ func gen_items(num):
 				item.set_item_type("dandelion")
 				item.set_pocket("botannical")
 				item.set_sprite("res://sprites/dandelion.png")
+			elif r == 2:
+				item.set_item_type("rock")
+				item.set_pocket("material")
+				item.set_sprite("res://sprites/rock.png")
+			elif r == 3:
+				item.set_item_type("stick")
+				item.set_pocket("material")
+				item.set_sprite("res://sprites/stick.png")
 			else:
 				item.set_item_type("fern")
 				item.set_pocket("botannical")

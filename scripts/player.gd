@@ -71,6 +71,18 @@ func hunger_tick():
 
 	update_status_panel()
 
+func restore_hunger(a):
+	hunger = hunger + a
+	if hunger > maxhunger:
+		hunger = maxhunger
+	update_status_panel()
+
+func restore_hp(a):
+	hp = hp + a
+	if hp > maxhp:
+		hp = maxhp
+	update_status_panel()
+
 func change_dir(d):
 	dir = d
 	self.get_node("Sprite").frame = dir
@@ -141,13 +153,21 @@ func pickup_item(item):
 	
 	# put item in bag
 	# TODO: item details should be stored in main
-	## NOTE: THIS DOESN"T WORK RN
 	if item.pocket == "botannical":
 		if bag.has_bot(item.type):
 			bag.botannicals[item.type] += 1
 		else:
-			bag[item.type] = 1
-		
+			bag.botannicals[item.type] = 1
+	elif item.pocket == "material":
+		if bag.has_mat(item.type):
+			bag.materials[item.type] += 1
+		else:
+			bag.materials[item.type] = 1
+	elif item.pocket == "weapon":
+		if bag.has_wp(item.type):
+			bag.weapons[item.type] += 1
+		else:
+			bag.weapons[item.type] = 1
 	# remove item from world map
 	item.get_parent().remove_child(item)
 

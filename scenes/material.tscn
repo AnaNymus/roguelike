@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://sprites/rock.png" type="Texture" id=1]
+[ext_resource path="res://scripts/material.gd" type="Script" id=2]
+
+[node name="material" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+centered = false

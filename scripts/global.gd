@@ -43,6 +43,23 @@ func _ready():
 	f.set_large_sprite("res://sprites/fern_large.png")
 	botannical["fern"] = f
 	
+	i = preload("res://scenes/material.tscn")
+	
+	var s = i.instance()
+	s.set_item_type("stick")
+	s.set_flavor("It's just a stick.")
+	s.set_large_sprite("res://sprites/stick_large.png")
+	s.set_small_sprite("res://sprites/stick.png")
+	material["stick"] = s
+	
+	var r = i.instance()
+	r.set_item_type("rock")
+	r.set_flavor("A fist-sized rock. It has a good weight to it.")
+	r.set_damage(5)
+	r.add_tag("thrown")
+	r.set_small_sprite("res://sprites/rock.png")
+	r.set_large_sprite("res://sprites/rock_large.png")
+	material["rock"] = r
 	
 
 

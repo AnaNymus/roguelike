@@ -91,14 +91,28 @@ __meta__ = {
 }
 
 [node name="use" type="Button" parent="info"]
-margin_left = 226.243
-margin_top = 212.082
-margin_right = 385.243
-margin_bottom = 278.082
+margin_left = 230.729
+margin_top = 210.405
+margin_right = 385.729
+margin_bottom = 232.405
 text = "Use!"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="throw" type="Button" parent="info"]
+margin_left = 232.324
+margin_top = 243.189
+margin_right = 386.324
+margin_bottom = 263.189
+text = "Throw!"
+
+[node name="discard" type="Button" parent="info"]
+margin_left = 233.838
+margin_top = 276.0
+margin_right = 383.838
+margin_bottom = 296.0
+text = "Discard!"
 
 [node name="pockets" type="ItemList" parent="."]
 margin_left = 18.0
@@ -110,4 +124,5 @@ __meta__ = {
 }
 [connection signal="pressed" from="close" to="." method="_on_close_pressed"]
 [connection signal="item_activated" from="ItemList" to="." method="_on_ItemList_item_activated"]
+[connection signal="pressed" from="info/use" to="." method="_on_use_pressed"]
 [connection signal="item_activated" from="pockets" to="." method="_on_pockets_item_activated"]
