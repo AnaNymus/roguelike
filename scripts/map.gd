@@ -5,6 +5,7 @@ extends Node2D
 var tilemap
 var items
 var static_tiles
+var throw_border
 
 # the size of the map (# of tiles in each direction)
 var mapSize
@@ -15,6 +16,8 @@ var featureMap
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	throw_border = self.get_node("throw_border")
+	
 	randomize()
 	# TODO: later, once we sort out map generation, we will 
 	# set this based on generated map size
@@ -41,6 +44,7 @@ func new_floor():
 	# delete remaining items
 	delete_items()
 	delete_features()
+	delete_enemies()
 	itemMap = create_2d_array(mapSize)
 	featureMap = create_2d_array(mapSize)
 	
@@ -50,6 +54,7 @@ func new_floor():
 	# place new items
 	gen_items(5)
 	gen_features(5)
+	gen_enemies(5)
 	
 	# place new stairs
 	place_stairs()
@@ -116,6 +121,9 @@ func delete_features():
 		if not feat.type == "stairs":
 			feat.get_parent().remove_child(feat)
 
+## TODO: actually make this work
+func delete_enemies():
+	pass
 
 func remove_feature(pos):
 	var feat = featureMap[pos.x][pos.y]
@@ -181,7 +189,14 @@ func gen_features(num):
 			item.position = tilemap.map_to_world(vec)
 			featureMap[vec.x][vec.y] = item
 			countdown -= 1
+
+## TODO: make this work
+func gen_enemies(num):
+	var countdown = num
 	
+	while countdown > 0:
+		pass
+
 func place_stairs():
 	# TODO: keep things from overlapping!!!
 	var vec = get_open_tile()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://sprites/tileset.png" type="Texture" id=1]
 [ext_resource path="res://sprites/roguelike test sprite.png" type="Texture" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://scripts/map.gd" type="Script" id=5]
 [ext_resource path="res://scenes/stairs.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/bag_display.tscn" type="PackedScene" id=7]
+[ext_resource path="res://sprites/border.png" type="Texture" id=8]
+[ext_resource path="res://sprites/slime.png" type="Texture" id=9]
 
 [sub_resource type="TileSet" id=1]
 0/name = "floor"
@@ -41,6 +43,15 @@
 [node name="main" type="Node2D"]
 script = ExtResource( 4 )
 
+[node name="enemies" type="Node2D" parent="."]
+
+[node name="slime" type="Node2D" parent="enemies"]
+
+[node name="Sprite" type="Sprite" parent="enemies/slime"]
+texture = ExtResource( 9 )
+centered = false
+vframes = 8
+
 [node name="map" type="Node2D" parent="."]
 script = ExtResource( 5 )
 
@@ -51,6 +62,12 @@ z_index = 1
 
 [node name="down_stairs" parent="map/static_tiles" instance=ExtResource( 6 )]
 position = Vector2( 221.184, 55.0993 )
+
+[node name="throw_border" type="Sprite" parent="map"]
+visible = false
+z_index = 1
+texture = ExtResource( 8 )
+centered = false
 
 [node name="player" type="Node2D" parent="."]
 position = Vector2( 32, 32 )
@@ -91,12 +108,11 @@ margin_bottom = 37.0254
 text = "Hunger: X/100"
 
 [node name="bag_display" parent="player" instance=ExtResource( 7 )]
+visible = false
 margin_left = -399.182
 margin_top = -218.244
 margin_right = 387.289
 margin_bottom = 218.169
-
-[node name="enemies" type="Node2D" parent="."]
 
 [node name="TileMap" type="TileMap" parent="."]
 visible = false

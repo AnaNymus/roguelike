@@ -47,6 +47,7 @@ var allInputLocked = false
 # set to true to allow player to turn in place
 var turnLocked = false
 
+
 # options
 # overworld, bag, hotbar
 var mode = "overworld"
@@ -85,6 +86,16 @@ func get_player_input():
 		turnLocked = false
 		print("unlock")
 	
+	# TODO: debug to remove later
+	if Input.is_action_pressed("debug_initiate_throw"):
+		mode = "throw"
+		map.throw_border.visible = true
+		map.throw_border.position = map2screen(player.which_tile_facing())
+		# TODO: make border visible 
+	if Input.is_action_pressed("debug_end_throw"):
+		mode = "overworld"
+		map.throw_border.visible = false
+	
 	if !allInputLocked:
 		## TODO: what is priority order for inputs?
 		
@@ -119,7 +130,7 @@ func get_player_input():
 	else:
 		return -1
 
-func input_bag(input):
+func input_move(input):
 	# move buttons
 	if input == PRESS_UP:
 		player.change_dir(BACK)
@@ -227,6 +238,70 @@ func input_bag(input):
 		mode = "bag"
 		player.get_node("bag_display").on_opened()
 
+func input_throw(input):
+	## TODO: cap the distance from player, make variable based on object and player stats
+	var max_distance = 6
+	
+	var throw_pos = screen2map(map.throw_border.position)
+	
+	if input == PRESS_UP:
+		var d = sqrt(pow(player.pos.x - throw_pos.x, 2) + pow(player.pos.y - (throw_pos.y - 1), 2))
+		
+		if d < max_distance:
+			map.throw_border.position += map2screen(Vector2(0, -1))
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+	elif input == PRESS_DOWN:
+		var d = sqrt(pow(player.pos.x - throw_pos.x, 2) + pow(player.pos.y - (throw_pos.y + 1), 2))
+		
+		if d < max_distance:
+			map.throw_border.position += map2screen(Vector2(0, 1))
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+	elif input == PRESS_LEFT:
+		var d = sqrt(pow(player.pos.x - (throw_pos.x - 1), 2) + pow(player.pos.y - throw_pos.y, 2))
+		
+		if d < max_distance:
+			map.throw_border.position += map2screen(Vector2(-1, 0))
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+	elif input == PRESS_RIGHT:
+		var d = sqrt(pow(player.pos.x - (throw_pos.x + 1), 2) + pow(player.pos.y - throw_pos.y, 2))
+		
+		if d < max_distance:
+			map.throw_border.position += map2screen(Vector2(1, 0))
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+	elif input == PRESS_UP_LEFT:
+		var d = sqrt(pow(player.pos.x - (throw_pos.x - 1), 2) + pow(player.pos.y - (throw_pos.y - 1), 2))
+		
+		if d < max_distance:
+			map.throw_border.position += map2screen(Vector2(-1, -1))
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+	elif input == PRESS_UP_RIGHT:
+		var d = sqrt(pow(player.pos.x - (throw_pos.x + 1), 2) + pow(player.pos.y - (throw_pos.y - 1), 2))
+		
+		if d < max_distance:
+			map.throw_border.position += map2screen(Vector2(1, -1))
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+	elif input == PRESS_DOWN_LEFT:
+		var d = sqrt(pow(player.pos.x - (throw_pos.x - 1), 2) + pow(player.pos.y - (throw_pos.y + 1), 2))
+		
+		if d < max_distance:
+			map.throw_border.position += map2screen(Vector2(-1, 1))
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+	elif input == PRESS_DOWN_RIGHT:
+		var d = sqrt(pow(player.pos.x - (throw_pos.x + 1), 2) + pow(player.pos.y - (throw_pos.y + 1), 2))
+		
+		if d < max_distance:
+			map.throw_border.position += map2screen(Vector2(1, 1))
+			allInputLocked = true
+			player.animationTimer = player.animationTimerMax
+
+
 # called every frame
 func _physics_process(delta):
 	var input = get_player_input()
@@ -242,7 +317,9 @@ func _physics_process(delta):
 	# if there was player input, carry it out
 	if input > 0:
 		if mode == "overworld":
-			input_bag(input)
+			input_move(input)
+		elif mode == "throw":
+			input_throw(input)
 		## TODO: check mode first
 		
 		
