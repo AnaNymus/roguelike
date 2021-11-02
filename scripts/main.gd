@@ -135,28 +135,28 @@ func input_move(input):
 	if input == PRESS_UP:
 		player.change_dir(BACK)
 		if not turnLocked:
-			if not map.check_for_features(player.which_tile_facing()):
+			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(0, -1)):
 					allInputLocked = true
 					player.move_up()
 	elif input == PRESS_DOWN:
 		player.change_dir(FRONT)
 		if not turnLocked:
-			if not map.check_for_features(player.which_tile_facing()):
+			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(0, 1)):
 					allInputLocked = true
 					player.move_down()
 	elif input == PRESS_LEFT:
 		player.change_dir(LEFT)
 		if not turnLocked:
-			if not map.check_for_features(player.which_tile_facing()):
+			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(-1, 0)):
 					allInputLocked = true
 					player.move_left()
 	elif input == PRESS_RIGHT:
 		player.change_dir(RIGHT)
 		if not turnLocked:
-			if not map.check_for_features(player.which_tile_facing()):
+			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(1, 0)):
 					allInputLocked = true
 					player.move_right()
@@ -164,28 +164,28 @@ func input_move(input):
 	elif input == PRESS_UP_LEFT:
 		player.change_dir(BACK_LEFT)
 		if not turnLocked:
-			if not map.check_for_features(player.which_tile_facing()):
+			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(-1, -1)):
 					allInputLocked = true
 					player.move_up_left()
 	elif input == PRESS_UP_RIGHT:
 		player.change_dir(BACK_RIGHT)
 		if not turnLocked:
-			if not map.check_for_features(player.which_tile_facing()):
+			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(1, -1)):
 					allInputLocked = true
 					player.move_up_right()
 	elif input == PRESS_DOWN_LEFT:
 		player.change_dir(FRONT_LEFT)
 		if not turnLocked:
-			if not map.check_for_features(player.which_tile_facing()):
+			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(-1, 1)):
 					allInputLocked = true
 					player.move_down_left()
 	elif input == PRESS_DOWN_RIGHT:
 		player.change_dir(FRONT_RIGHT)
 		if not turnLocked:
-			if not map.check_for_features(player.which_tile_facing()):
+			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(1, 1)):
 					allInputLocked = true
 					player.move_down_right()
@@ -200,7 +200,7 @@ func input_move(input):
 				player.position = map2screen(player.pos)
 			else:
 				allInputLocked = true
-				map.itemMap[screen2map(item.position).x][screen2map(item.position).y] = null
+				map.groundLevel[screen2map(item.position).x][screen2map(item.position).y] = null
 				player.pickup_item(item)
 	elif input == INTERACT:
 		## TODO: this function is general-purpose and needs to be expanded
@@ -208,8 +208,8 @@ func input_move(input):
 		# in the future, it will be the function for speaking to entities
 		# opening doors/chests, etc
 		var w = player.which_tile_facing()
-		print(map.itemMap[w.x][w.y])
-		print(map.featureMap[w.x][w.y])
+		print(map.groundLevel[w.x][w.y])
+		print(map.midLevel[w.x][w.y])
 		allInputLocked = true
 		player.animationTimer = player.animationTimerMax
 	elif input == MELEE_ATTACK:
@@ -222,11 +222,13 @@ func input_move(input):
 		self.add_child(at)
 		at.position = map2screen(w)
 		
-		var f = map.check_for_features(w)
+		var f = map.check_midLevel(w)
 		
 		if f:
-			var feat = map.featureMap[w.x][w.y]
+			var feat = map.midLevel[w.x][w.y]
 			if feat.type == "tree":
+				feat.take_damage(5)
+			elif feat.type == "slime":
 				feat.take_damage(5)
 		## TODO: this will be the general purpose function for attacking an enemy with a melee weapon
 		# the item in the player's hand will be used to calculate damage

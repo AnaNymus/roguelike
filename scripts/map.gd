@@ -6,13 +6,14 @@ var tilemap
 var items
 var static_tiles
 var throw_border
+var enemies
 
 # the size of the map (# of tiles in each direction)
 var mapSize
 
 # an array detailing what items are in what cells
-var itemMap
-var featureMap
+var groundLevel # the "floor": entities that the player can step on
+var midLevel # the level that the player is on. Player cannot step on or over entites on this level
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -25,15 +26,15 @@ func _ready():
 	
 	get_new_map(mapSize)
 	items = self.get_node("items")
-	
 	static_tiles = self.get_node("static_tiles")
+	enemies = self.get_parent().get_node("enemies")
 	
-	
-	itemMap = create_2d_array(mapSize)
-	featureMap = create_2d_array(mapSize)
+	groundLevel = create_2d_array(mapSize)
+	midLevel = create_2d_array(mapSize)
 	# set items in place
 	gen_items(5)
 	gen_features(5)
+	gen_enemies(5)
 	place_stairs()
 
 # NOTE: retains old map size
@@ -45,8 +46,8 @@ func new_floor():
 	delete_items()
 	delete_features()
 	delete_enemies()
-	itemMap = create_2d_array(mapSize)
-	featureMap = create_2d_array(mapSize)
+	groundLevel = create_2d_array(mapSize)
+	midLevel = create_2d_array(mapSize)
 	
 	# generate new floorplan
 	get_new_map(mapSize)
@@ -55,7 +56,6 @@ func new_floor():
 	gen_items(5)
 	gen_features(5)
 	gen_enemies(5)
-	
 	# place new stairs
 	place_stairs()
 
@@ -85,8 +85,8 @@ func check_pos(pos):
 	else:
 		return false
 
-func check_for_features(pos):
-	var t = featureMap[pos.x][pos.y]
+func check_midLevel(pos):
+	var t = midLevel[pos.x][pos.y]
 	if t == null:
 		return false
 	else:
@@ -96,7 +96,7 @@ func check_for_features(pos):
 func check_for_interactive(pos):
 	# TODO: there will be multiple classes of interactive item later
 	# but for now, only items
-	return itemMap[pos.x][pos.y]
+	return groundLevel[pos.x][pos.y]
 
 func get_new_map(size):
 	var i = preload("res://scenes/map_generator.tscn")
@@ -123,12 +123,18 @@ func delete_features():
 
 ## TODO: actually make this work
 func delete_enemies():
-	pass
+	for enemy in enemies.get_children():
+		enemy.get_parent().remove_child(enemy)
 
 func remove_feature(pos):
-	var feat = featureMap[pos.x][pos.y]
-	featureMap[pos.x][pos.y] = null
-	self.get_node("static_tiles").remove_child(feat)
+	var feat = midLevel[pos.x][pos.y]
+	midLevel[pos.x][pos.y] = null
+	static_tiles.remove_child(feat)
+
+func remove_enemy(pos):
+	var enemy = midLevel[pos.x][pos.y]
+	midLevel[pos.x][pos.y] = null
+	enemies.remove_child(enemy)
 
 # randomly places NUM items on accessible areas of the floor
 # TODO: later, this should take a dictionary of item IDs and
@@ -138,76 +144,71 @@ func gen_items(num):
 	var countdown = num
 	var i = preload("res://scenes/item.tscn")
 	
-	while countdown > 0:
-		var vec = Vector2(randi()%int(mapSize.x), randi()%int(mapSize.y))
+	for x in range(num):
+		var vec = get_open_tile()
+		var item = i.instance()
 		
-		if check_pos(vec):
-			#TODO check that map elements don't overlap
+		var r = randi()%5
+		
+		if r == 0:
+			item.set_item_type("apple")
+			item.set_pocket("botannical")
+			item.set_sprite("res://sprites/apple.png")
+		elif r == 1:
+			item.set_item_type("dandelion")
+			item.set_pocket("botannical")
+			item.set_sprite("res://sprites/dandelion.png")
+		elif r == 2:
+			item.set_item_type("rock")
+			item.set_pocket("material")
+			item.set_sprite("res://sprites/rock.png")
+		elif r == 3:
+			item.set_item_type("stick")
+			item.set_pocket("material")
+			item.set_sprite("res://sprites/stick.png")
+		else:
+			item.set_item_type("fern")
+			item.set_pocket("botannical")
+			item.set_sprite("res://sprites/fern.png")
 			
-			var item = i.instance()
-			
-			var r = randi()%5
-			
-			if r == 0:
-				item.set_item_type("apple")
-				item.set_pocket("botannical")
-				item.set_sprite("res://sprites/apple.png")
-			elif r == 1:
-				item.set_item_type("dandelion")
-				item.set_pocket("botannical")
-				item.set_sprite("res://sprites/dandelion.png")
-			elif r == 2:
-				item.set_item_type("rock")
-				item.set_pocket("material")
-				item.set_sprite("res://sprites/rock.png")
-			elif r == 3:
-				item.set_item_type("stick")
-				item.set_pocket("material")
-				item.set_sprite("res://sprites/stick.png")
-			else:
-				item.set_item_type("fern")
-				item.set_pocket("botannical")
-				item.set_sprite("res://sprites/fern.png")
-				
-			items.add_child(item)
-			item.position = tilemap.map_to_world(vec)
-			itemMap[vec.x][vec.y] = item
-			countdown -= 1
-	
+		items.add_child(item)
+		item.position = tilemap.map_to_world(vec)
+		groundLevel[vec.x][vec.y] = item
+		countdown -= 1
+
 func gen_features(num):
 	var countdown = num
 	var i = preload("res://scenes/feature.tscn")
 	
-	while countdown > 0:
-		var vec = Vector2(randi()%int(mapSize.x), randi()%int(mapSize.y))
-		
-		if check_pos(vec):
-			#TODO check that map elements don't overlap
-			print(vec)
-			var item = i.instance()
-			static_tiles.add_child(item)
-			item.position = tilemap.map_to_world(vec)
-			featureMap[vec.x][vec.y] = item
-			countdown -= 1
+	for x in range(num):
+		var vec = get_open_tile()
+		var item = i.instance()
+		static_tiles.add_child(item)
+		item.position = tilemap.map_to_world(vec)
+		midLevel[vec.x][vec.y] = item
+		countdown -= 1
 
 ## TODO: make this work
 func gen_enemies(num):
-	var countdown = num
+	var i = preload("res://scenes/slime.tscn")
 	
-	while countdown > 0:
-		pass
+	for x in range(num):
+		var vec = get_open_tile()
+		var enemy = i.instance()
+		enemies.add_child(enemy)
+		enemy.position = tilemap.map_to_world(vec)
+		midLevel[vec.x][vec.y] = enemy
+
 
 func place_stairs():
 	# TODO: keep things from overlapping!!!
 	var vec = get_open_tile()
 	#static_tiles.get_node("up_stairs").position = tilemap.map_to_world(vec)
 	#static_tiles.get_node("up_stairs").setas_up()
-	#itemMap[vec.x][vec.y] = static_tiles.get_node("up_stairs")
-	
-	vec = get_open_tile()
+	#groundLevel[vec.x][vec.y] = static_tiles.get_node("up_stairs")
 	static_tiles.get_node("down_stairs").position = tilemap.map_to_world(vec)
 	static_tiles.get_node("down_stairs").setas_down()
-	itemMap[vec.x][vec.y] = static_tiles.get_node("down_stairs")
+	groundLevel[vec.x][vec.y] = static_tiles.get_node("down_stairs")
 	
 
 
@@ -215,4 +216,6 @@ func get_open_tile():
 	while true:
 		var vec = Vector2(randi()%int(mapSize.x), randi()%int(mapSize.y))
 		if check_pos(vec):
-			return vec
+			if check_for_interactive(vec) == null:
+				if not check_midLevel(vec):
+					return vec
