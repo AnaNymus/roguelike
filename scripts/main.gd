@@ -43,7 +43,8 @@ const FRONT_RIGHT = 7
 
 # set to true to ignore all player input
 var allInputLocked = false
-
+# set to true when it is the enemies' turn
+var enemyLocked = false
 # set to true to allow player to turn in place
 var turnLocked = false
 
@@ -57,12 +58,14 @@ var mode = "overworld"
 var player
 var map
 var global
+var enemies
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	global = get_node("/root/global")
 	player = self.get_node("player")
 	map = self.get_node("map")
+	enemies = self.get_node("enemies")
 	
 	player.pos = map.get_open_tile()
 	player.position = map2screen(player.pos)
@@ -139,6 +142,7 @@ func input_move(input):
 				if map.check_pos(player.get_pos() + Vector2(0, -1)):
 					allInputLocked = true
 					player.move_up()
+					enemy_turn()
 	elif input == PRESS_DOWN:
 		player.change_dir(FRONT)
 		if not turnLocked:
@@ -146,6 +150,7 @@ func input_move(input):
 				if map.check_pos(player.get_pos() + Vector2(0, 1)):
 					allInputLocked = true
 					player.move_down()
+					enemy_turn()
 	elif input == PRESS_LEFT:
 		player.change_dir(LEFT)
 		if not turnLocked:
@@ -153,6 +158,7 @@ func input_move(input):
 				if map.check_pos(player.get_pos() + Vector2(-1, 0)):
 					allInputLocked = true
 					player.move_left()
+					enemy_turn()
 	elif input == PRESS_RIGHT:
 		player.change_dir(RIGHT)
 		if not turnLocked:
@@ -160,6 +166,7 @@ func input_move(input):
 				if map.check_pos(player.get_pos() + Vector2(1, 0)):
 					allInputLocked = true
 					player.move_right()
+					enemy_turn()
 	## TODO: player should not be able to clip corners
 	elif input == PRESS_UP_LEFT:
 		player.change_dir(BACK_LEFT)
@@ -168,6 +175,7 @@ func input_move(input):
 				if map.check_pos(player.get_pos() + Vector2(-1, -1)):
 					allInputLocked = true
 					player.move_up_left()
+					enemy_turn()
 	elif input == PRESS_UP_RIGHT:
 		player.change_dir(BACK_RIGHT)
 		if not turnLocked:
@@ -175,6 +183,7 @@ func input_move(input):
 				if map.check_pos(player.get_pos() + Vector2(1, -1)):
 					allInputLocked = true
 					player.move_up_right()
+					enemy_turn()
 	elif input == PRESS_DOWN_LEFT:
 		player.change_dir(FRONT_LEFT)
 		if not turnLocked:
@@ -182,6 +191,7 @@ func input_move(input):
 				if map.check_pos(player.get_pos() + Vector2(-1, 1)):
 					allInputLocked = true
 					player.move_down_left()
+					enemy_turn()
 	elif input == PRESS_DOWN_RIGHT:
 		player.change_dir(FRONT_RIGHT)
 		if not turnLocked:
@@ -189,6 +199,7 @@ func input_move(input):
 				if map.check_pos(player.get_pos() + Vector2(1, 1)):
 					allInputLocked = true
 					player.move_down_right()
+					enemy_turn()
 	# interact
 	elif input == SELECT:
 		var item = map.check_for_interactive(player.get_pos())
@@ -202,6 +213,7 @@ func input_move(input):
 				allInputLocked = true
 				map.groundLevel[screen2map(item.position).x][screen2map(item.position).y] = null
 				player.pickup_item(item)
+				enemy_turn()
 	elif input == INTERACT:
 		## TODO: this function is general-purpose and needs to be expanded
 		# for now, it should just print out whatever item is in front of the player
@@ -212,6 +224,7 @@ func input_move(input):
 		print(map.midLevel[w.x][w.y])
 		allInputLocked = true
 		player.animationTimer = player.animationTimerMax
+		enemy_turn()
 	elif input == MELEE_ATTACK:
 		print("attack")
 		var w = player.which_tile_facing()
@@ -230,6 +243,7 @@ func input_move(input):
 				feat.take_damage(5)
 			elif feat.type == "slime":
 				feat.take_damage(5)
+		enemy_turn()
 		## TODO: this will be the general purpose function for attacking an enemy with a melee weapon
 		# the item in the player's hand will be used to calculate damage
 		# non-weapon items will default to 1 damage, but may have additional effects
@@ -303,6 +317,11 @@ func input_throw(input):
 			allInputLocked = true
 			player.animationTimer = player.animationTimerMax
 
+func enemy_turn():
+	enemyLocked = true
+	for x in enemies.get_children():
+		x.take_turn()
+	enemyLocked = false
 
 # called every frame
 func _physics_process(delta):

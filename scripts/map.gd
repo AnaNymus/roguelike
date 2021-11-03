@@ -110,6 +110,9 @@ func get_new_map(size):
 	self.add_child(m)
 	tilemap = m
 	
+func move_enemy(pos, newpos):
+	midLevel[newpos.x][newpos.y] = midLevel[pos.x][pos.y]
+	midLevel[pos.x][pos.y] = null
 	
 
 func delete_items():

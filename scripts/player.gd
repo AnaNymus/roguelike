@@ -37,7 +37,7 @@ var animationTimerMax = 0.2
 
 # TODO: more advanced later
 var bag
-
+## TODO TODO TODO: put player on the map, literally!!!!!!!
 # Called when the node enters the scene tree for the first time.
 func _ready():
 
