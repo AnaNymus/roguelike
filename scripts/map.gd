@@ -73,6 +73,13 @@ func create_2d_array(size):
 	return a
 	
 
+func place_player(pos):
+	midLevel[pos.x][pos.y] = "player"
+
+func move_player(pos, newpos):
+	midLevel[pos.x][pos.y] = null
+	midLevel[newpos.x][newpos.y] = "player"
+
 # returns TRUE if space can be moved into
 # returns FALSE if space is wall
 # TODO: also return false if space is occupied by another entity

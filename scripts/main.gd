@@ -68,6 +68,7 @@ func _ready():
 	enemies = self.get_node("enemies")
 	
 	player.pos = map.get_open_tile()
+	map.place_player(player.pos)
 	player.position = map2screen(player.pos)
 
 ### UTILITY FUNCTIONS ###
@@ -141,6 +142,7 @@ func input_move(input):
 			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(0, -1)):
 					allInputLocked = true
+					map.move_player(player.get_pos(), player.which_tile_facing())
 					player.move_up()
 					enemy_turn()
 	elif input == PRESS_DOWN:
@@ -149,6 +151,7 @@ func input_move(input):
 			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(0, 1)):
 					allInputLocked = true
+					map.move_player(player.get_pos(), player.which_tile_facing())
 					player.move_down()
 					enemy_turn()
 	elif input == PRESS_LEFT:
@@ -157,6 +160,7 @@ func input_move(input):
 			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(-1, 0)):
 					allInputLocked = true
+					map.move_player(player.get_pos(), player.which_tile_facing())
 					player.move_left()
 					enemy_turn()
 	elif input == PRESS_RIGHT:
@@ -165,6 +169,7 @@ func input_move(input):
 			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(1, 0)):
 					allInputLocked = true
+					map.move_player(player.get_pos(), player.which_tile_facing())
 					player.move_right()
 					enemy_turn()
 	## TODO: player should not be able to clip corners
@@ -174,6 +179,7 @@ func input_move(input):
 			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(-1, -1)):
 					allInputLocked = true
+					map.move_player(player.get_pos(), player.which_tile_facing())
 					player.move_up_left()
 					enemy_turn()
 	elif input == PRESS_UP_RIGHT:
@@ -182,6 +188,7 @@ func input_move(input):
 			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(1, -1)):
 					allInputLocked = true
+					map.move_player(player.get_pos(), player.which_tile_facing())
 					player.move_up_right()
 					enemy_turn()
 	elif input == PRESS_DOWN_LEFT:
@@ -190,6 +197,7 @@ func input_move(input):
 			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(-1, 1)):
 					allInputLocked = true
+					map.move_player(player.get_pos(), player.which_tile_facing())
 					player.move_down_left()
 					enemy_turn()
 	elif input == PRESS_DOWN_RIGHT:
@@ -198,6 +206,7 @@ func input_move(input):
 			if not map.check_midLevel(player.which_tile_facing()):
 				if map.check_pos(player.get_pos() + Vector2(1, 1)):
 					allInputLocked = true
+					map.move_player(player.get_pos(), player.which_tile_facing())
 					player.move_down_right()
 					enemy_turn()
 	# interact

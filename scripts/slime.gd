@@ -36,6 +36,7 @@ func take_turn():
 func move_random():
 	
 	var dir = randi()%8
+	self.get_node("Sprite").frame = dir
 	var pos = main.screen2map(self.position)
 	print(pos)
 	if dir == FRONT:
