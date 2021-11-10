@@ -9,6 +9,8 @@ const BACK_RIGHT = 5
 const RIGHT = 6
 const FRONT_RIGHT = 7
 
+const hframes = 4
+
 var type = "slime"
 
 var maxhp = 15
@@ -36,7 +38,7 @@ func take_turn():
 func move_random():
 	
 	var dir = randi()%8
-	self.get_node("Sprite").frame = dir
+	self.get_node("Sprite").frame = dir*hframes
 	var pos = main.screen2map(self.position)
 	print(pos)
 	if dir == FRONT:

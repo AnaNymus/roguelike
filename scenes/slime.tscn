@@ -11,3 +11,4 @@ z_index = 2
 texture = ExtResource( 1 )
 centered = false
 vframes = 8
+hframes = 4
