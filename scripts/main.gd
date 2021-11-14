@@ -35,6 +35,9 @@ const BACK_RIGHT = 5
 const RIGHT = 6
 const FRONT_RIGHT = 7
 
+# how often to update animations
+const framerate = 0.25
+
 ### VARIABLES ###
 
 # TODO: will need more granular locks eventually
@@ -53,6 +56,10 @@ var turnLocked = false
 # overworld, bag, hotbar
 var mode = "overworld"
 
+# timer to control animation things
+var animation_timer = 0.0
+# things that have an animate() function that should be called
+var animated_entities = []
 
 # entities
 var player
@@ -352,5 +359,11 @@ func _physics_process(delta):
 			input_throw(input)
 		## TODO: check mode first
 		
-		
-			
+	
+	## handle animation things
+	animation_timer += delta
+	if animation_timer >= framerate:
+		animation_timer = 0
+		for entity in animated_entities:
+			entity.animate()
+	

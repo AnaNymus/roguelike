@@ -7,6 +7,7 @@ var items
 var static_tiles
 var throw_border
 var enemies
+var main
 
 # the size of the map (# of tiles in each direction)
 var mapSize
@@ -17,6 +18,7 @@ var midLevel # the level that the player is on. Player cannot step on or over en
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	main = self.get_parent()
 	throw_border = self.get_node("throw_border")
 	
 	randomize()
@@ -134,6 +136,7 @@ func delete_features():
 ## TODO: actually make this work
 func delete_enemies():
 	for enemy in enemies.get_children():
+		main.animated_entities.remove(main.animated_entities.find(enemy))
 		enemy.get_parent().remove_child(enemy)
 
 func remove_feature(pos):
@@ -143,6 +146,7 @@ func remove_feature(pos):
 
 func remove_enemy(pos):
 	var enemy = midLevel[pos.x][pos.y]
+	main.animated_entities.remove(main.animated_entities.find(enemy))
 	midLevel[pos.x][pos.y] = null
 	enemies.remove_child(enemy)
 
@@ -208,6 +212,7 @@ func gen_enemies(num):
 		enemies.add_child(enemy)
 		enemy.position = tilemap.map_to_world(vec)
 		midLevel[vec.x][vec.y] = enemy
+		main.animated_entities.append(enemy)
 
 
 func place_stairs():
