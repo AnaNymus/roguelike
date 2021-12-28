@@ -20,6 +20,10 @@ var map
 var main
 var sprite
 
+# governs how the slime animates
+# options are: idle, move, attack, death
+var anim_mode = "idle"
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	map = self.get_parent().get_parent().get_node("map")
@@ -37,16 +41,31 @@ func take_turn():
 	move_random()
 
 func animate():
-	if sprite.frame % hframes == 0:
-		sprite.frame += 3
-	else:
-		sprite.frame -= 3
+	var resid = sprite.frame % hframes
+	
+	if anim_mode == "idle":
+		if resid == 0:
+			sprite.frame += 3
+		else:
+			sprite.frame -= 3
+	elif anim_mode == "move":
+		if resid == 3:
+			sprite.frame -= 3
+			anim_mode = "idle"
+			##TODO end action
+		else:
+			sprite.frame += 1
+	elif anim_mode == "attack":
+		pass
+	elif anim_mode == "die":
+		pass
 
 
 func move_random():
 	
 	var dir = randi()%8
 	sprite.frame = dir*hframes
+	anim_mode = "move"
 	var pos = main.screen2map(self.position)
 	print(pos)
 	if dir == FRONT:
