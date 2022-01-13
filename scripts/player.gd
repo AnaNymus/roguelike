@@ -26,6 +26,8 @@ var maxhunger = 100
 const HUNGER_TURNS = 5
 var hungerCounter = 0
 
+var anim_mode = "idle"
+
 #main node
 var main
 var status
@@ -34,6 +36,9 @@ var status
 # TODO: may not be best here
 var animationTimer = 0
 var animationTimerMax = 0.2
+
+# set to true whenever player is taking an action (to let animation play out)
+var acting = false
 
 # TODO: more advanced later
 var bag
@@ -175,22 +180,16 @@ func pickup_item(item):
 
 # returns the pos of the tile directly in front of player
 func which_tile_facing():
-	if dir == FRONT:
-		return pos + Vector2(0, 1)
-	elif dir == FRONT_LEFT:
-		return pos + Vector2(-1, 1)
-	elif dir == LEFT:
-		return pos + Vector2(-1, 0)
-	elif dir == BACK_LEFT:
-		return pos + Vector2(-1, -1)
-	elif dir == BACK:
-		return pos + Vector2(0, -1)
-	elif dir == BACK_RIGHT:
-		return pos + Vector2(1, -1)
-	elif dir == RIGHT:
-		return pos + Vector2(1, 0)
-	elif dir == FRONT_RIGHT:
-		return pos + Vector2(1, 1)
+	return pos + global.DIR[dir]
+	
+
+func animate():
+	if anim_mode == "idle":
+		pass
+	elif anim_mode == "move":
+		pass
+	elif anim_mode == "attack":
+		pass
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

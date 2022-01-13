@@ -137,6 +137,7 @@ func delete_features():
 func delete_enemies():
 	for enemy in enemies.get_children():
 		main.animated_entities.remove(main.animated_entities.find(enemy))
+		main.entities_with_actions.remove(main.entities_with_actions.find(enemy))
 		enemy.get_parent().remove_child(enemy)
 
 func remove_feature(pos):
@@ -147,6 +148,7 @@ func remove_feature(pos):
 func remove_enemy(pos):
 	var enemy = midLevel[pos.x][pos.y]
 	main.animated_entities.remove(main.animated_entities.find(enemy))
+	main.entities_with_actions.remove(main.entities_with_actions.find(enemy))
 	midLevel[pos.x][pos.y] = null
 	enemies.remove_child(enemy)
 
@@ -213,6 +215,7 @@ func gen_enemies(num):
 		enemy.position = tilemap.map_to_world(vec)
 		midLevel[vec.x][vec.y] = enemy
 		main.animated_entities.append(enemy)
+		main.entities_with_actions.append(enemy)
 
 
 func place_stairs():

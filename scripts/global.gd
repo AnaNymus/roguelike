@@ -1,6 +1,20 @@
 extends Node
 
+# character direction codes
+const FRONT = 0
+const FRONT_LEFT = 1
+const LEFT = 2
+const BACK_LEFT = 3
+const BACK = 4
+const BACK_RIGHT = 5
+const RIGHT = 6
+const FRONT_RIGHT = 7
 
+# vectors corresponding to each of the above direction codes
+const DIR = [Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1), Vector2(1, 0), Vector2(1, 1)]
+
+
+const tileSize = 32
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"

@@ -36,7 +36,7 @@ const RIGHT = 6
 const FRONT_RIGHT = 7
 
 # how often to update animations
-const framerate = 0.25
+const framerate = 0.1
 
 ### VARIABLES ###
 
@@ -51,7 +51,6 @@ var enemyLocked = false
 # set to true to allow player to turn in place
 var turnLocked = false
 
-
 # options
 # overworld, bag, hotbar
 var mode = "overworld"
@@ -60,6 +59,14 @@ var mode = "overworld"
 var animation_timer = 0.0
 # things that have an animate() function that should be called
 var animated_entities = []
+
+# keeps track of all entities that are taking some sort of turn
+# all should have a variable "acting" that is set to true when 
+# they are performing an action
+# enemyLocked is set to true when actions are being performed
+# and is set to false once all entities in entities with actions 
+# have acting = false
+var entities_with_actions = []
 
 # entities
 var player
@@ -77,7 +84,9 @@ func _ready():
 	player.pos = map.get_open_tile()
 	map.place_player(player.pos)
 	player.position = map2screen(player.pos)
-
+	
+	## TODO: add player to entities_with_actions
+	
 ### UTILITY FUNCTIONS ###
 
 # convert screen coordinates to map coordinates
@@ -143,6 +152,7 @@ func get_player_input():
 
 func input_move(input):
 	# move buttons
+	
 	if input == PRESS_UP:
 		player.change_dir(BACK)
 		if not turnLocked:
@@ -337,7 +347,6 @@ func enemy_turn():
 	enemyLocked = true
 	for x in enemies.get_children():
 		x.take_turn()
-	enemyLocked = false
 
 # called every frame
 func _physics_process(delta):
@@ -350,13 +359,23 @@ func _physics_process(delta):
 	# etc. 
 	# that way we can separate the different input functions neatly
 	
+	#check to see if player input can be processed
+	if enemyLocked:
+		var unlock = true
+		for e in entities_with_actions:
+			if e.acting:
+				unlock = false
+		
+		if unlock:
+			enemyLocked = false
 	
+	if not enemyLocked:
 	# if there was player input, carry it out
-	if input > 0:
-		if mode == "overworld":
-			input_move(input)
-		elif mode == "throw":
-			input_throw(input)
+		if input > 0:
+			if mode == "overworld":
+				input_move(input)
+			elif mode == "throw":
+				input_throw(input)
 		## TODO: check mode first
 		
 	

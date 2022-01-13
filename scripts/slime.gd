@@ -16,10 +16,16 @@ var type = "slime"
 var maxhp = 15
 var currenthp = 15
 
+# set to true whenever player is taking an action (to let animation play out
+var acting = false
+
 var map
 var main
 var sprite
+var global
 
+# the direction the sprite is facing right now
+var dir
 # governs how the slime animates
 # options are: idle, move, attack, death
 var anim_mode = "idle"
@@ -29,6 +35,9 @@ func _ready():
 	map = self.get_parent().get_parent().get_node("map")
 	main = self.get_parent().get_parent()
 	sprite = self.get_node("Sprite")
+	global = get_node("/root/global")
+	
+	dir = global.FRONT
 
 func take_damage(dmg):
 	currenthp -= dmg
@@ -38,7 +47,11 @@ func take_damage(dmg):
 
 func take_turn():
 	#TODO: make more complex
+	acting = true
 	move_random()
+
+func end_action():
+	acting = false
 
 func animate():
 	var resid = sprite.frame % hframes
@@ -51,10 +64,14 @@ func animate():
 	elif anim_mode == "move":
 		if resid == 3:
 			sprite.frame -= 3
+			self.sprite.offset = Vector2(0, 0)
+			end_action()
 			anim_mode = "idle"
 			##TODO end action
 		else:
+			## TODO: only have offset if slime can move into space
 			sprite.frame += 1
+			self.sprite.offset += 0.25 *global.tileSize * global.DIR[dir]
 	elif anim_mode == "attack":
 		pass
 	elif anim_mode == "die":
@@ -62,49 +79,24 @@ func animate():
 
 
 func move_random():
+	var pos = main.screen2map(self.position)
 	
-	var dir = randi()%8
+	var free_dir = []
+	for i in range(8):
+		if not map.check_midLevel(pos + global.DIR[i]):
+			if map.check_pos(pos + global.DIR[i]):
+				free_dir.append(i)
+	
+	if len(free_dir) == 0:
+		end_action()
+		return
+	
+	dir = free_dir[randi()%len(free_dir)]
+	
 	sprite.frame = dir*hframes
 	anim_mode = "move"
-	var pos = main.screen2map(self.position)
-	print(pos)
-	if dir == FRONT:
-		if not map.check_midLevel(pos + Vector2(0, 1)):
-			if map.check_pos(pos + Vector2(0, 1)):
-				map.move_enemy(pos, pos + Vector2(0, 1))
-				self.position = main.map2screen(pos + Vector2(0, 1))
-	elif dir == FRONT_LEFT:
-		if not map.check_midLevel(pos + Vector2(-1, 1)):
-			if map.check_pos(pos + Vector2(-1, 1)):
-				map.move_enemy(pos, pos + Vector2(-1, 1))
-				self.position = main.map2screen(pos + Vector2(-1, 1))
-	elif dir == LEFT:
-		if not map.check_midLevel(pos + Vector2(-1, 0)):
-			if map.check_pos(pos + Vector2(-1, 0)):
-				map.move_enemy(pos, pos + Vector2(-1, 0))
-				self.position = main.map2screen(pos + Vector2(-1, 0))
-	elif dir == BACK_LEFT:
-		if not map.check_midLevel(pos + Vector2(-1, -1)):
-			if map.check_pos(pos + Vector2(-1, -1)):
-				map.move_enemy(pos, pos + Vector2(-1, -1))
-				self.position = main.map2screen(pos + Vector2(-1, -1))
-	elif dir == BACK:
-		if not map.check_midLevel(pos + Vector2(0, -1)):
-			if map.check_pos(pos + Vector2(0, -1)):
-				map.move_enemy(pos, pos + Vector2(0, -1))
-				self.position = main.map2screen(pos + Vector2(0, -1))
-	elif dir == BACK_RIGHT:
-		if not map.check_midLevel(pos + Vector2(1, -1)):
-			if map.check_pos(pos + Vector2(1, -1)):
-				map.move_enemy(pos, pos + Vector2(1, -1))
-				self.position = main.map2screen(pos + Vector2(1, -1))
-	elif dir == RIGHT:
-		if not map.check_midLevel(pos + Vector2(1, 0)):
-			if map.check_pos(pos + Vector2(1, 0)):
-				map.move_enemy(pos, pos + Vector2(1, 0))
-				self.position = main.map2screen(pos + Vector2(1, 0))
-	elif dir == FRONT_RIGHT:
-		if not map.check_midLevel(pos + Vector2(1, 1)):
-			if map.check_pos(pos + Vector2(1, 1)):
-				map.move_enemy(pos, pos + Vector2(1, 1))
-				self.position = main.map2screen(pos + Vector2(1, 1))
+	if not map.check_midLevel(pos + global.DIR[dir]):
+		if map.check_pos(pos + global.DIR[dir]):
+			map.move_enemy(pos, pos + global.DIR[dir])
+			self.position = main.map2screen(pos + global.DIR[dir])
+			self.sprite.offset = global.DIR[dir] * -global.tileSize
