@@ -12,15 +12,17 @@ extends Node2D
 const tileSize = 32
 
 # button press codes
-const PRESS_UP = 1
-const PRESS_DOWN = 2
-const PRESS_RIGHT = 3
-const PRESS_LEFT = 4
-const SELECT = 5
-const PRESS_UP_LEFT = 6
-const PRESS_DOWN_LEFT = 7
-const PRESS_UP_RIGHT = 8
-const PRESS_DOWN_RIGHT = 9
+
+const PRESS_DOWN = 1
+const PRESS_DOWN_LEFT = 2
+const PRESS_LEFT = 3
+const PRESS_UP_LEFT = 4
+const PRESS_UP = 5
+const PRESS_UP_RIGHT = 6
+const PRESS_RIGHT = 7
+const PRESS_DOWN_RIGHT = 8
+
+const SELECT = 9
 const INTERACT = 10
 const MELEE_ATTACK = 11
 const OPEN_BAG = 12
@@ -84,6 +86,8 @@ func _ready():
 	player.pos = map.get_open_tile()
 	map.place_player(player.pos)
 	player.position = map2screen(player.pos)
+	entities_with_actions.append(player)
+	animated_entities.append(player)
 	
 	## TODO: add player to entities_with_actions
 	
@@ -152,79 +156,15 @@ func get_player_input():
 
 func input_move(input):
 	# move buttons
-	
-	if input == PRESS_UP:
-		player.change_dir(BACK)
+	if input >= PRESS_DOWN and input <= PRESS_DOWN_RIGHT:
+		var dir = input - 1
+		player.change_dir(dir)
 		if not turnLocked:
 			if not map.check_midLevel(player.which_tile_facing()):
-				if map.check_pos(player.get_pos() + Vector2(0, -1)):
+				if map.check_pos(player.get_pos() + global.DIR[dir]):
 					allInputLocked = true
 					map.move_player(player.get_pos(), player.which_tile_facing())
-					player.move_up()
-					enemy_turn()
-	elif input == PRESS_DOWN:
-		player.change_dir(FRONT)
-		if not turnLocked:
-			if not map.check_midLevel(player.which_tile_facing()):
-				if map.check_pos(player.get_pos() + Vector2(0, 1)):
-					allInputLocked = true
-					map.move_player(player.get_pos(), player.which_tile_facing())
-					player.move_down()
-					enemy_turn()
-	elif input == PRESS_LEFT:
-		player.change_dir(LEFT)
-		if not turnLocked:
-			if not map.check_midLevel(player.which_tile_facing()):
-				if map.check_pos(player.get_pos() + Vector2(-1, 0)):
-					allInputLocked = true
-					map.move_player(player.get_pos(), player.which_tile_facing())
-					player.move_left()
-					enemy_turn()
-	elif input == PRESS_RIGHT:
-		player.change_dir(RIGHT)
-		if not turnLocked:
-			if not map.check_midLevel(player.which_tile_facing()):
-				if map.check_pos(player.get_pos() + Vector2(1, 0)):
-					allInputLocked = true
-					map.move_player(player.get_pos(), player.which_tile_facing())
-					player.move_right()
-					enemy_turn()
-	## TODO: player should not be able to clip corners
-	elif input == PRESS_UP_LEFT:
-		player.change_dir(BACK_LEFT)
-		if not turnLocked:
-			if not map.check_midLevel(player.which_tile_facing()):
-				if map.check_pos(player.get_pos() + Vector2(-1, -1)):
-					allInputLocked = true
-					map.move_player(player.get_pos(), player.which_tile_facing())
-					player.move_up_left()
-					enemy_turn()
-	elif input == PRESS_UP_RIGHT:
-		player.change_dir(BACK_RIGHT)
-		if not turnLocked:
-			if not map.check_midLevel(player.which_tile_facing()):
-				if map.check_pos(player.get_pos() + Vector2(1, -1)):
-					allInputLocked = true
-					map.move_player(player.get_pos(), player.which_tile_facing())
-					player.move_up_right()
-					enemy_turn()
-	elif input == PRESS_DOWN_LEFT:
-		player.change_dir(FRONT_LEFT)
-		if not turnLocked:
-			if not map.check_midLevel(player.which_tile_facing()):
-				if map.check_pos(player.get_pos() + Vector2(-1, 1)):
-					allInputLocked = true
-					map.move_player(player.get_pos(), player.which_tile_facing())
-					player.move_down_left()
-					enemy_turn()
-	elif input == PRESS_DOWN_RIGHT:
-		player.change_dir(FRONT_RIGHT)
-		if not turnLocked:
-			if not map.check_midLevel(player.which_tile_facing()):
-				if map.check_pos(player.get_pos() + Vector2(1, 1)):
-					allInputLocked = true
-					map.move_player(player.get_pos(), player.which_tile_facing())
-					player.move_down_right()
+					player.move_player(dir)
 					enemy_turn()
 	# interact
 	elif input == SELECT:

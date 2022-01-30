@@ -31,6 +31,7 @@ var anim_mode = "idle"
 #main node
 var main
 var status
+var sprite
 
 # timers
 # TODO: may not be best here
@@ -39,6 +40,7 @@ var animationTimerMax = 0.2
 
 # set to true whenever player is taking an action (to let animation play out)
 var acting = false
+var hframes = 4
 
 # TODO: more advanced later
 var bag
@@ -49,7 +51,9 @@ func _ready():
 	main = self.get_parent()
 	status = self.get_node("status_panel")
 	bag = self.get_node("bag_display")
+	sprite = self.get_node("Sprite")
 	update_status_panel()
+	
 
 
 ## UTILITY FUNCTIONS
@@ -90,65 +94,20 @@ func restore_hp(a):
 
 func change_dir(d):
 	dir = d
-	self.get_node("Sprite").frame = dir
+	self.sprite.frame = dir * hframes
 
 ## MOVEMENT FUNCTIONS
 
-func move_up():
-	animationTimer = animationTimerMax
-	pos.y = pos.y - 1
-	position = main.map2screen(pos)
-	hunger_tick()
-	#print(pos)
+## TODO: this is way too clunky
+# also we need to put offset into this thing
 
-
-func move_down():
+func move_player(d):
+	acting = true
+	anim_mode = "move"
 	animationTimer = animationTimerMax
-	pos.y = pos.y + 1
+	pos = pos + global.DIR[d]
 	position = main.map2screen(pos)
-	hunger_tick()
-	#print(pos)
-
-func move_left():
-	animationTimer = animationTimerMax
-	pos.x = pos.x - 1
-	position = main.map2screen(pos)
-	hunger_tick()
-	#print(pos)
-
-func move_right():
-	animationTimer = animationTimerMax
-	pos.x = pos.x + 1
-	position = main.map2screen(pos)
-	hunger_tick()
-	#print(pos)
-
-func move_up_right():
-	animationTimer = animationTimerMax
-	pos.x = pos.x + 1
-	pos.y = pos.y - 1
-	position = main.map2screen(pos)
-	hunger_tick()
-
-func move_down_right():
-	animationTimer = animationTimerMax
-	pos.x = pos.x + 1
-	pos.y = pos.y + 1
-	position = main.map2screen(pos)
-	hunger_tick()
-
-func move_up_left():
-	animationTimer = animationTimerMax
-	pos.x = pos.x - 1
-	pos.y = pos.y - 1
-	position = main.map2screen(pos)
-	hunger_tick()
-
-func move_down_left():
-	animationTimer = animationTimerMax
-	pos.x = pos.x - 1
-	pos.y = pos.y + 1
-	position = main.map2screen(pos)
+	self.sprite.position = global.DIR[d] * -global.tileSize
 	hunger_tick()
 
 ## INTERACT FUNCTIONS
@@ -184,10 +143,19 @@ func which_tile_facing():
 	
 
 func animate():
+	var resid = self.get_node("Sprite").frame % hframes
 	if anim_mode == "idle":
 		pass
 	elif anim_mode == "move":
-		pass
+		if resid == 3:
+			self.sprite.frame -= 3
+			self.sprite.position = Vector2(0, 0)
+			anim_mode = "idle"
+			acting = false
+		else:
+			## TODO: only have offset if slime can move into space
+			self.sprite.frame += 1
+			self.sprite.position += 0.25 *global.tileSize * global.DIR[dir]
 	elif anim_mode == "attack":
 		pass
 	
