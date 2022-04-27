@@ -9,7 +9,7 @@ const BACK_RIGHT = 5
 const RIGHT = 6
 const FRONT_RIGHT = 7
 
-const hframes = 4
+const hframes = 14
 
 var type = "slime"
 
@@ -43,12 +43,13 @@ func take_damage(dmg):
 	currenthp -= dmg
 	
 	if currenthp <= 0:
-		map.remove_enemy(map.get_parent().screen2map(self.position))
+		anim_mode = "die"
 
 func take_turn():
 	#TODO: make more complex
 	acting = true
-	move_random()
+	if not anim_mode == "die":
+		move_random()
 
 func end_action():
 	acting = false
@@ -58,9 +59,14 @@ func animate():
 	
 	if anim_mode == "idle":
 		if resid == 0:
-			sprite.frame += 3
+			if randi()%3 == 0:
+				sprite.frame += 4
+		elif resid == 4:
+			if randi()%3 == 0:
+				sprite.frame += 1
 		else:
-			sprite.frame -= 3
+			if randi()%3 == 0:
+				sprite.frame -= 5
 	elif anim_mode == "move":
 		if resid == 3:
 			sprite.frame -= 3
@@ -73,9 +79,21 @@ func animate():
 			sprite.frame += 1
 			self.sprite.offset += 0.25 *global.tileSize * global.DIR[dir]
 	elif anim_mode == "attack":
-		pass
+		if resid == 0:
+			sprite.frame += 6
+		elif resid < 9:
+			sprite.frame += 1
+		else:
+			sprite.frame -= 9
 	elif anim_mode == "die":
-		pass
+		if resid == 0:
+			sprite.frame += 10
+		elif resid < 14:
+			sprite.frame += 1
+		else:
+			
+			# TODO: remove from lists in main
+			map.remove_enemy(map.get_parent().screen2map(self.position))
 
 
 func move_random():
