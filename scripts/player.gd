@@ -40,7 +40,8 @@ var animationTimerMax = 0.2
 
 # set to true whenever player is taking an action (to let animation play out)
 var acting = false
-var hframes = 4
+var hframes = 7
+var left_foot_first = true
 
 # TODO: more advanced later
 var bag
@@ -49,7 +50,7 @@ var bag
 func _ready():
 
 	main = self.get_parent()
-	status = self.get_node("status_panel")
+	status = self.get_node("Sprite/status_panel")
 	bag = self.get_node("bag_display")
 	sprite = self.get_node("Sprite")
 	update_status_panel()
@@ -147,15 +148,30 @@ func animate():
 	if anim_mode == "idle":
 		pass
 	elif anim_mode == "move":
-		if resid == 3:
-			self.sprite.frame -= 3
-			self.sprite.position = Vector2(0, 0)
-			anim_mode = "idle"
-			acting = false
+		if left_foot_first:
+			if resid == 3:
+				self.sprite.frame -= 3
+				self.sprite.position = Vector2(0, 0)
+				anim_mode = "idle"
+				left_foot_first=false
+				acting = false
+			else:
+				## TODO: only have offset if slime can move into space
+				self.sprite.frame += 1
+				self.sprite.position += 0.25 *global.tileSize * global.DIR[dir]
 		else:
-			## TODO: only have offset if slime can move into space
-			self.sprite.frame += 1
-			self.sprite.position += 0.25 *global.tileSize * global.DIR[dir]
+			if resid == 6:
+				self.sprite.frame -= 6
+				self.sprite.position = Vector2(0, 0)
+				anim_mode = "idle"
+				left_foot_first=true
+				acting = false
+			elif resid == 0:
+				self.sprite.frame += 4
+				self.sprite.position += 0.25 *global.tileSize * global.DIR[dir]
+			else:
+				self.sprite.frame += 1
+				self.sprite.position += 0.25 *global.tileSize * global.DIR[dir]
 	elif anim_mode == "attack":
 		pass
 	

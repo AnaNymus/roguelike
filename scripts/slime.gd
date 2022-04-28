@@ -88,7 +88,7 @@ func animate():
 	elif anim_mode == "die":
 		if resid == 0:
 			sprite.frame += 10
-		elif resid < 14:
+		elif resid < 13:
 			sprite.frame += 1
 		else:
 			
