@@ -78,6 +78,7 @@ var enemies
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	resized()
 	global = get_node("/root/global")
 	player = self.get_node("player")
 	map = self.get_node("map")
@@ -88,6 +89,8 @@ func _ready():
 	player.position = map2screen(player.pos)
 	entities_with_actions.append(player)
 	animated_entities.append(player)
+	
+	get_viewport().connect("size_changed", self, "resized")
 	
 	## TODO: add player to entities_with_actions
 	
@@ -100,6 +103,12 @@ func screen2map(pos):
 # convert map coordinates to screen coordinates
 func map2screen(pos):
 	return Vector2(pos.x*32, pos.y*32)
+
+func resized():
+	var width = get_viewport().get_size().x
+	var height = get_viewport().get_size().y
+	
+	self.get_node("player/Sprite/status_panel").set_position(Vector2(int(width/(-4) + 10), int(height/(-4) + 10)))
 
 ### PLAYER INPUT FUNCTIONS ###
 func get_player_input():

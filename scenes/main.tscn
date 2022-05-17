@@ -75,10 +75,8 @@ vframes = 8
 hframes = 7
 
 [node name="status_panel" type="Panel" parent="player/Sprite"]
-margin_left = -500.0
-margin_top = -290.0
-margin_right = -327.0
-margin_bottom = -246.0
+margin_right = 173.0
+margin_bottom = 44.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -96,9 +94,13 @@ margin_top = 23.0254
 margin_right = 100.153
 margin_bottom = 37.0254
 text = "Hunger: X/100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Camera2D" type="Camera2D" parent="player/Sprite"]
 current = true
+zoom = Vector2( 0.5, 0.5 )
 smoothing_speed = 10.0
 
 [node name="bag_display" parent="player" instance=ExtResource( 7 )]
