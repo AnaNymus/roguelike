@@ -75,8 +75,10 @@ vframes = 8
 hframes = 7
 
 [node name="status_panel" type="Panel" parent="player/Sprite"]
-margin_right = 173.0
-margin_bottom = 44.0
+margin_left = -243.952
+margin_top = -130.815
+margin_right = -70.9519
+margin_bottom = -72.8148
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -94,6 +96,16 @@ margin_top = 23.0254
 margin_right = 100.153
 margin_bottom = 37.0254
 text = "Hunger: X/100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="level_label" type="Label" parent="player/Sprite/status_panel"]
+margin_left = 9.75
+margin_top = 39.75
+margin_right = 51.75
+margin_bottom = 53.75
+text = "Level: 1"
 __meta__ = {
 "_edit_use_anchors_": false
 }

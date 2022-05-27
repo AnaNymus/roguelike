@@ -25,9 +25,11 @@ var botannical = {}
 var material = {}
 var weapon = {}
 
+var current_level
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	current_level = 0
 	## TODO: eventually, items will be randomly generated
 	# but for now we'll describe a couple
 	var i = preload("res://scenes/botannical.tscn")

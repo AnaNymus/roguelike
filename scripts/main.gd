@@ -110,6 +110,9 @@ func resized():
 	
 	self.get_node("player/Sprite/status_panel").set_position(Vector2(int(width/(-4) + 10), int(height/(-4) + 10)))
 
+func update_level_label(x):
+	player.update_level(x)
+
 ### PLAYER INPUT FUNCTIONS ###
 func get_player_input():
 	if Input.is_action_just_pressed("ui_turn"):

@@ -8,6 +8,7 @@ var static_tiles
 var throw_border
 var enemies
 var main
+var global
 
 # the size of the map (# of tiles in each direction)
 var mapSize
@@ -15,9 +16,11 @@ var mapSize
 # an array detailing what items are in what cells
 var groundLevel # the "floor": entities that the player can step on
 var midLevel # the level that the player is on. Player cannot step on or over entites on this level
+var current_level = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	global = get_node("/root/global")
 	main = self.get_parent()
 	throw_border = self.get_node("throw_border")
 	
@@ -60,6 +63,9 @@ func new_floor():
 	gen_enemies(5)
 	# place new stairs
 	place_stairs()
+	
+	current_level += 1
+	main.update_level_label(current_level)
 
 ## UTILITY FUNCTIONs ##
 
@@ -118,6 +124,7 @@ func get_new_map(size):
 	
 	self.add_child(m)
 	tilemap = m
+	
 	
 func move_enemy(pos, newpos):
 	midLevel[newpos.x][newpos.y] = midLevel[pos.x][pos.y]

@@ -66,6 +66,10 @@ func update_status_panel():
 	status.get_node("hp_label").text = "HP: " + str(hp) + " / " + str(maxhp)
 	status.get_node("hunger_label").text = "Hunger: " + str(hunger) + " / " + str(maxhunger)
 
+## LEVEL UPDATE FUNCTION
+func update_level(lv):
+	status.get_node("level_label").text = "Level: " + str(lv)
+
 # when an action is performed, make hunger tick down by one
 # TODO: when hunger = 0, what happens?
 func hunger_tick():
