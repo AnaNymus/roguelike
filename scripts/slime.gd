@@ -9,7 +9,7 @@ const BACK_RIGHT = 5
 const RIGHT = 6
 const FRONT_RIGHT = 7
 
-const hframes = 14
+const hframes = 17
 
 var type = "slime"
 
